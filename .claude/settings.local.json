@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx prisma *)",
+      "Bash(yarn prisma *)",
+      "Bash(Get-ChildItem -Recurse \"D:\\\\01-Codigo\\\\Aticus\\\\Fixture\\\\client\" -Include \"*.css\",\"*.scss\")",
+      "Bash(Select-Object FullName)",
+      "Bash(Get-ChildItem -Path \"D:\\\\01-Codigo\\\\Aticus\\\\Fixture\\\\client\\\\src\" -Recurse -Directory)",
+      "PowerShell(Get-ChildItem -Path \"D:\\\\01-Codigo\\\\Aticus\\\\Fixture\\\\client\" -Recurse -File | Where-Object { $_.Extension -match '\\\\.\\(jsx?|tsx?|css|scss|sass\\)$' } | Select-Object FullName | Sort-Object)"
+    ]
+  }
+}

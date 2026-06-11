@@ -1,0 +1,13 @@
+{
+  "name": "fixture",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev:server": "yarn workspace server dev",
+    "dev:client": "yarn workspace client dev",
+    "seed": "yarn workspace server db:seed"
+  }
+}
