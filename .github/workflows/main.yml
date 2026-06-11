@@ -1,0 +1,63 @@
+name: Deploy Node.js to SmarterASP.NET
+on:
+  push:
+    branches:
+      - master 
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.20'
+
+      - name: Install and Build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          yarn install
+          yarn run build
+
+      - name: Bundle server with ncc
+        run: |
+          npx @vercel/ncc build server/dist/index.js \
+            --out ./fixture/server/dist \
+            --external @prisma/client \
+            --external .prisma
+
+      - name: Prepare deploy directory
+        run: |
+          mkdir -p ./fixture/client/dist
+          cp web.config ./fixture/web.config
+          sed -i "s|__DATABASE_URL__|${{ secrets.DATABASE_URL }}|g" ./fixture/web.config
+          sed -i "s|__JWT_SECRET__|${{ secrets.JWT_SECRET }}|g" ./fixture/web.config
+          sed -i "s|__CLIENT_ORIGIN__|${{ secrets.CLIENT_ORIGIN }}|g" ./fixture/web.config
+          sed -i "s|__MP_ACCESS_TOKEN__|${{ secrets.MP_ACCESS_TOKEN }}|g" ./fixture/web.config
+          sed -i "s|__MP_WEBHOOK_SECRET__|${{ secrets.MP_WEBHOOK_SECRET }}|g" ./fixture/web.config
+          sed -i "s|__PAYPAL_CLIENT_ID__|${{ secrets.PAYPAL_CLIENT_ID }}|g" ./fixture/web.config
+          sed -i "s|__PAYPAL_CLIENT_SECRET__|${{ secrets.PAYPAL_CLIENT_SECRET }}|g" ./fixture/web.config
+          sed -i "s|__PAYPAL_WEBHOOK_ID__|${{ secrets.PAYPAL_WEBHOOK_ID }}|g" ./fixture/web.config
+          cp -r client/dist/. ./fixture/client/dist/
+          cp -r server/prisma ./fixture/server/prisma
+          cp server/prisma.config.ts ./fixture/server/prisma.config.ts
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > ./fixture/server/.env
+          mkdir -p ./fixture/node_modules/@prisma
+          cp -r node_modules/@prisma/. ./fixture/node_modules/@prisma/
+          cp -r server/node_modules/@prisma/client ./fixture/node_modules/@prisma/client
+          cp -r server/node_modules/.prisma ./fixture/node_modules/.prisma
+
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: rdguzman-002-site1.jtempurl.com
+          username: rdguzman-002
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./fixture/
+          server-dir: /fixture/
+          exclude: |
+            **/.git*
+            **/.git*/**      
