@@ -6,6 +6,7 @@
     "client"
   ],
   "scripts": {
+    "build": "yarn install --production=false && yarn workspace @fixture/server prisma:generate && yarn workspace @fixture/server prisma:migrate:deploy && yarn workspace client build && yarn workspace @fixture/server build",
     "dev:server": "yarn workspace server dev",
     "dev:client": "yarn workspace client dev",
     "seed": "yarn workspace server db:seed"
