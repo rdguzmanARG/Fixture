@@ -85,6 +85,28 @@ router.delete("/:matchId", authenticate, async (req, res) => {
   res.json({ ok: true });
 });
 
+router.get("/user/:userId", authenticate, async (req, res) => {
+  const userId = parseInt(req.params.userId);
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { id: true, username: true },
+  });
+  if (!user) return res.status(404).json({ error: "User not found" });
+
+  const predictions = await prisma.prediction.findMany({
+    where: { userId },
+    include: {
+      match: {
+        include: { homeTeam: true, awayTeam: true },
+      },
+    },
+    orderBy: [{ match: { date: "asc" } }, { match: { matchNumber: "asc" } }],
+  });
+
+  res.json({ user, predictions });
+});
+
 router.get("/leaderboard", authenticate, async (req, res) => {
   const users = await prisma.user.findMany({
     where: { isAdmin: false },
