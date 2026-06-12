@@ -79,4 +79,20 @@ router.put("/:id/result", authenticate, requireAdmin, async (req, res) => {
   res.json({ ok: true, matchNumber: match.matchNumber });
 });
 
+router.delete("/:id/result", authenticate, requireAdmin, async (req, res) => {
+  const matchId = parseInt(req.params.id);
+
+  await prisma.match.update({
+    where: { id: matchId },
+    data: { homeScore: null, awayScore: null },
+  });
+
+  await prisma.prediction.updateMany({
+    where: { matchId },
+    data: { points: null },
+  });
+
+  res.json({ ok: true, matchId });
+});
+
 export default router;

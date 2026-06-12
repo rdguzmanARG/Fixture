@@ -12,6 +12,7 @@ export default function Navbar() {
         <div className="navbar__inner">
           <span className="navbar__brand">⚽ Mundial 2026</span>
           <ul className="navbar__nav">
+            <li><NavLink to="/all">Todos</NavLink></li>
             <li><NavLink to="/groups">Grupos</NavLink></li>
             <li><NavLink to="/knockout">Eliminatorias</NavLink></li>
             <li><NavLink to="/leaderboard">Clasificación</NavLink></li>

@@ -66,6 +66,25 @@ router.post("/", authenticate, async (req, res) => {
   res.json(prediction);
 });
 
+router.delete("/:matchId", authenticate, async (req, res) => {
+  const { userId } = req.user;
+  const matchId = parseInt(req.params.matchId);
+
+  const match = await prisma.match.findUnique({ where: { id: matchId } });
+  if (!match) return res.status(404).json({ error: "Match not found" });
+  if (match.isLocked)
+    return res.status(403).json({ error: "Predictions for this match are closed" });
+
+  const deleted = await prisma.prediction.deleteMany({
+    where: { userId, matchId },
+  });
+
+  if (deleted.count === 0)
+    return res.status(404).json({ error: "Prediction not found" });
+
+  res.json({ ok: true });
+});
+
 router.get("/leaderboard", authenticate, async (req, res) => {
   const users = await prisma.user.findMany({
     where: { isAdmin: false },

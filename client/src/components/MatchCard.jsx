@@ -41,14 +41,18 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const [dirty, setDirty] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [localSaved, setLocalSaved] = useState(!!pred);
 
   // Admin state
   const [adminHome, setAdminHome] = useState(match.homeScore ?? '');
   const [adminAway, setAdminAway] = useState(match.awayScore ?? '');
   const [settingResult, setSettingResult] = useState(false);
+  const [removingResult, setRemovingResult] = useState(false);
   const [locked, setLocked] = useState(match.isLocked ?? false);
   const [togglingLock, setTogglingLock] = useState(false);
 
+  const hasPred = !!pred || localSaved;
   const status = cardStatus(match, pred);
   const homeLabel = match.homeTeam?.name || match.homeTeamLabel || '?';
   const awayLabel = match.awayTeam?.name || match.awayTeamLabel || '?';
@@ -68,6 +72,7 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
       });
       if (r.ok) {
         setDirty(false);
+        setLocalSaved(true);
         onPredictionSaved?.();
       } else if (r.status === 401) {
         await logout();
@@ -80,6 +85,34 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
       setSaveError('Error de red');
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function deletePrediction() {
+    setDeleting(true);
+    setSaveError(null);
+    try {
+      const r = await fetch(`/api/predictions/${match.id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      if (r.ok) {
+        setHome('');
+        setAway('');
+        setDirty(false);
+        setLocalSaved(false);
+        onPredictionSaved?.();
+      } else if (r.status === 401) {
+        await logout();
+        navigate('/login');
+      } else {
+        const data = await r.json().catch(() => ({}));
+        setSaveError(data.error || 'Error al borrar');
+      }
+    } catch {
+      setSaveError('Error de red');
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -96,6 +129,19 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
       if (r.ok) onResultSet?.();
     } finally {
       setSettingResult(false);
+    }
+  }
+
+  async function removeResult() {
+    setRemovingResult(true);
+    try {
+      const r = await fetch(`/api/matches/${match.id}/result`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      if (r.ok) onResultSet?.();
+    } finally {
+      setRemovingResult(false);
     }
   }
 
@@ -145,7 +191,7 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
           <span className="match-card__locked">Cerrado</span>
         )}
         <input
-          className="match-card__score-input"
+          className={`match-card__score-input${hasPred && !dirty ? ' match-card__score-input--saved' : ''}`}
           type="number"
           min="0"
           max="99"
@@ -153,10 +199,11 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
           onChange={(e) => { setHome(e.target.value); setDirty(true); }}
           placeholder="0"
           disabled={locked}
+          readOnly={!locked && hasPred && !dirty}
         />
         <span className="match-card__dash">–</span>
         <input
-          className="match-card__score-input"
+          className={`match-card__score-input${hasPred && !dirty ? ' match-card__score-input--saved' : ''}`}
           type="number"
           min="0"
           max="99"
@@ -164,14 +211,27 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
           onChange={(e) => { setAway(e.target.value); setDirty(true); }}
           placeholder="0"
           disabled={locked}
+          readOnly={!locked && hasPred && !dirty}
         />
-        <button
-          className="match-card__save"
-          onClick={savePrediction}
-          disabled={locked || saving || (!dirty && pred != null) || home === '' || away === ''}
-        >
-          {saving ? '…' : pred && !dirty ? '✓' : 'Guardar'}
-        </button>
+        {(!hasPred || dirty) && (
+          <button
+            className="match-card__save"
+            onClick={savePrediction}
+            disabled={saving || home === '' || away === ''}
+          >
+            {saving ? '…' : 'Guardar'}
+          </button>
+        )}
+        {hasPred && !dirty && !locked && (
+          <button
+            className="match-card__delete"
+            onClick={deletePrediction}
+            disabled={deleting}
+            title="Borrar pronóstico"
+          >
+            {deleting ? '…' : '✕'}
+          </button>
+        )}
         {saveError && <span className="match-card__save-error">{saveError}</span>}
         {pred?.points != null && (
           <span className={`match-card__points-badge match-card__points-badge--${pred.points}`}>
@@ -203,6 +263,11 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
           <button className="btn btn--sm btn--admin" onClick={setResult} disabled={settingResult}>
             {settingResult ? '…' : 'Aplicar'}
           </button>
+          {match.homeScore != null && (
+            <button className="btn btn--sm btn--danger" onClick={removeResult} disabled={removingResult}>
+              {removingResult ? '…' : 'Borrar resultado'}
+            </button>
+          )}
           <button
             className={`btn btn--sm ${locked ? 'btn--lock-on' : 'btn--lock-off'}`}
             onClick={toggleLock}

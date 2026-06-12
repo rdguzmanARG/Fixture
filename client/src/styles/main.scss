@@ -450,6 +450,23 @@ input { font-family: inherit; }
     &:disabled { background: $grey-200; color: $grey-400; cursor: default; }
   }
 
+  &__delete {
+    background: transparent;
+    border: 1px solid $grey-200;
+    color: $grey-400;
+    width: 28px;
+    height: 28px;
+    border-radius: $radius;
+    font-size: .8rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color $transition, color $transition, background $transition;
+    &:hover { border-color: $red; color: $red; background: #fff5f5; }
+    &:disabled { opacity: .4; cursor: default; }
+  }
+
   &__save-error {
     font-size: .72rem;
     color: #e03131;
@@ -484,6 +501,14 @@ input { font-family: inherit; }
     cursor: not-allowed;
   }
 
+  &__score-input--saved {
+    background: $grey-50;
+    border-color: $grey-200;
+    color: $grey-700;
+    cursor: default;
+    pointer-events: none;
+  }
+
   &__admin {
     margin-top: .6rem;
     padding-top: .6rem;
@@ -497,6 +522,35 @@ input { font-family: inherit; }
 
 .btn--lock-on  { background: $red; color: $white; &:hover { background: color.adjust($red, $lightness: -8%); } &:disabled { opacity: .7; cursor: default; } }
 .btn--lock-off { background: $grey-200; color: $grey-700; &:hover { background: color.adjust($grey-200, $lightness: -6%); } &:disabled { opacity: .7; cursor: default; } }
+
+// ── All matches filter ────────────────────────────────────────────────────────
+.all-matches__filter {
+  margin-bottom: 1.5rem;
+}
+
+.all-matches__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .9rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: $grey-700;
+  background: $white;
+  border: 2px solid $grey-200;
+  border-radius: $radius;
+  padding: .45rem .9rem;
+  transition: border-color $transition;
+
+  &:hover { border-color: $green; color: $green; }
+
+  input[type='checkbox'] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: $green;
+  }
+}
 
 // ── Knockout bracket ──────────────────────────────────────────────────────────
 .bracket {
