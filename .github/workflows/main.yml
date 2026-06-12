@@ -2,7 +2,7 @@ name: Deploy Node.js to SmarterASP.NET
 on:
   push:
     branches:
-      - master 
+      - master
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -22,12 +22,17 @@ jobs:
           yarn install
           yarn run build
 
-      - name: Bundle server with ncc
+      - name: Bundle server with esbuild
         run: |
-          npx @vercel/ncc build server/dist/index.js \
-            --out ./fixture/server/dist \
-            --external @prisma/client \
-            --external .prisma
+          npx esbuild server/src/index.js \
+            --bundle \
+            --platform=node \
+            --format=cjs \
+            --outfile=./fixture/server/dist/index.js \
+            --external:@prisma/client \
+            --external:@prisma/adapter-mariadb \
+            --external:mariadb \
+            --external:.prisma
 
       - name: Prepare deploy directory
         run: |
@@ -38,12 +43,14 @@ jobs:
           sed -i "s|__CLIENT_ORIGIN__|${{ secrets.CLIENT_ORIGIN }}|g" ./fixture/web.config
           cp -r client/dist/. ./fixture/client/dist/
           cp -r server/prisma ./fixture/server/prisma
-          cp server/prisma.config.ts ./fixture/server/prisma.config.ts
+          cp server/prisma.config.js ./fixture/server/prisma.config.js
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > ./fixture/server/.env
           mkdir -p ./fixture/node_modules/@prisma
           cp -r node_modules/@prisma/. ./fixture/node_modules/@prisma/
           cp -r server/node_modules/@prisma/client ./fixture/node_modules/@prisma/client
+          cp -r server/node_modules/@prisma/adapter-mariadb ./fixture/node_modules/@prisma/adapter-mariadb
           cp -r server/node_modules/.prisma ./fixture/node_modules/.prisma
+          cp -r server/node_modules/mariadb ./fixture/node_modules/mariadb
 
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -55,4 +62,4 @@ jobs:
           server-dir: /fixture/
           exclude: |
             **/.git*
-            **/.git*/**      
+            **/.git*/**
