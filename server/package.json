@@ -1,6 +1,8 @@
 {
   "name": "fixture-server",
   "version": "1.0.0",
+  "private": true,
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "dev": "node --watch src/index.js",

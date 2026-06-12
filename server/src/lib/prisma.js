@@ -3,7 +3,8 @@ import { PrismaClient } from '@prisma/client';
 
 const { DATABASE_URL } = process.env;
 if (!DATABASE_URL) throw new Error('DATABASE_URL is not set');
-const dbUrl = DATABASE_URL.replace(/^mysql:\/\//, 'mariadb://');
+const sep = DATABASE_URL.includes('?') ? '&' : '?';
+const dbUrl = DATABASE_URL.replace(/^mysql:\/\//, 'mariadb://') + `${sep}connectionLimit=10`;
 const adapter = new PrismaMariaDb(dbUrl);
 const prisma = new PrismaClient({ adapter });
 

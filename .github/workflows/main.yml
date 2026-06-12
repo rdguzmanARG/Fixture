@@ -22,6 +22,12 @@ jobs:
           yarn install
           yarn run build
 
+      - name: Run DB migrations
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}?connection_limit=1
+        run: |
+          cd server && yarn prisma:migrate:deploy
+
       - name: Bundle server with esbuild
         run: |
           npx esbuild server/src/index.js \
