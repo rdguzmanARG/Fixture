@@ -38,8 +38,8 @@ export default function Leaderboard() {
                   <th>#</th>
                   <th>Jugador</th>
                   <th>Puntos</th>
-                  <th>Exacto (3pt)</th>
-                  <th>Correcto (1pt)</th>
+                  <th>Exacto (5pt)</th>
+                  <th>Correcto (3pt)</th>
                   <th>Pronósticos</th>
                 </tr>
               </thead>

@@ -26,8 +26,8 @@ function formatDate(dateStr) {
 function cardStatus(match, prediction) {
   if (!prediction) return '';
   if (match.homeScore == null) return 'saved';
-  if (prediction.points === 3) return 'exact';
-  if (prediction.points === 1) return 'correct';
+  if (prediction.points === 5) return 'exact';
+  if (prediction.points === 3) return 'correct';
   return 'wrong';
 }
 
