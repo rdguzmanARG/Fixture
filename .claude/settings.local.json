@@ -18,7 +18,10 @@
       "Bash(node -e \"import\\('dotenv'\\).then\\(m => console.log\\('dotenv available'\\)\\).catch\\(\\(\\) => console.log\\('not found'\\)\\)\")",
       "Bash(New-Item *)",
       "Bash(Get-ChildItem -Path \"D:\\\\01-Codigo\\\\Aticus\\\\Fixture\" -Recurse -Directory -Name)",
-      "Bash(Select-Object -First 20)"
+      "Bash(Select-Object -First 20)",
+      "Bash(Test-NetConnection *)",
+      "PowerShell(Test-NetConnection *)",
+      "Bash(Read \"C:\\\\Users\\\\ricar\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--01-Codigo-Aticus-Fixture\\\\15e238cd-98d9-43ff-88aa-6350e0926fd1\\\\tasks\\\\bdkhtj90l.output\")"
     ]
   }
 }

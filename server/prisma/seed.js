@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../src/lib/prisma.js';
 import bcrypt from 'bcryptjs';
-
-const prisma = new PrismaClient();
 
 // 2026 FIFA World Cup — official group assignments
 // flag = ISO 3166-1 alpha-2 code (lowercase) for flagcdn.com images
