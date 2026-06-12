@@ -13,7 +13,10 @@
       "Bash(yarn prisma:generate)",
       "Bash(del *)",
       "Bash(npm show *)",
-      "Bash(yarn install *)"
+      "Bash(yarn install *)",
+      "Bash(yarn workspace *)",
+      "Bash(node -e \"import\\('dotenv'\\).then\\(m => console.log\\('dotenv available'\\)\\).catch\\(\\(\\) => console.log\\('not found'\\)\\)\")",
+      "Bash(New-Item *)"
     ]
   }
 }
