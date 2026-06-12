@@ -2,6 +2,7 @@ import { Router } from "express";
 import prisma from "../lib/prisma.js";
 import { authenticate, requireAdmin } from "../middleware/auth.js";
 import { calculatePoints } from "../services/scoring.js";
+import { advanceFromResult } from "../services/knockoutService.js";
 
 const router = Router();
 
@@ -67,6 +68,8 @@ router.put("/:id/result", authenticate, requireAdmin, async (req, res) => {
       })
     ),
   );
+
+  await advanceFromResult(match);
 
   res.json({ ok: true, matchNumber: match.matchNumber });
 });

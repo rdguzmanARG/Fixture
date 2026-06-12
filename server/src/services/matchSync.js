@@ -1,6 +1,7 @@
 import axios from 'axios';
 import prisma from '../lib/prisma.js';
 import { calculatePoints } from './scoring.js';
+import { advanceFromResult } from './knockoutService.js';
 
 const API_BASE = 'https://api.football-data.org/v4';
 const COMPETITION = 'WC';
@@ -61,7 +62,10 @@ export async function syncMatchResults() {
 
     try {
       const changed = await applyResult(dbMatch, homeScore, awayScore);
-      if (changed) updated++;
+      if (changed) {
+        updated++;
+        await advanceFromResult({ ...dbMatch, homeScore, awayScore });
+      }
     } catch (err) {
       console.error(`[sync] Failed match ${dbMatch.matchNumber}:`, err.message);
     }

@@ -8,7 +8,7 @@ import authRouter from "./routes/auth.js";
 import matchesRouter from "./routes/matches.js";
 import predictionsRouter from "./routes/predictions.js";
 import "./jobs/syncResults.js";
-//import './jobs/lockMatches.js';
+import "./jobs/lockMatches.js";
 
 const clientDist = join(process.cwd(), "client/dist");
 

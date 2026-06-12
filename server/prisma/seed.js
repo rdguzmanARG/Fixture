@@ -103,46 +103,46 @@ const groupDefs = [
   { letter: 'L', startMatch: 67, startDate: '2026-06-17' },
 ];
 
-// Knockout stage — TBD teams filled after group stage
+// Knockout stage — TBD teams filled after group stage by knockoutService
 const knockoutMatches = [
-  // Round of 32 (matches 73-88)
-  { matchNumber: 73,  round: 'R32', homeTeamLabel: '1A', awayTeamLabel: '2B', date: '2026-06-29' },
-  { matchNumber: 74,  round: 'R32', homeTeamLabel: '1C', awayTeamLabel: '2D', date: '2026-06-29' },
-  { matchNumber: 75,  round: 'R32', homeTeamLabel: '1E', awayTeamLabel: '2F', date: '2026-06-30' },
-  { matchNumber: 76,  round: 'R32', homeTeamLabel: '1G', awayTeamLabel: '2H', date: '2026-06-30' },
-  { matchNumber: 77,  round: 'R32', homeTeamLabel: '1I', awayTeamLabel: '2J', date: '2026-07-01' },
-  { matchNumber: 78,  round: 'R32', homeTeamLabel: '1K', awayTeamLabel: '2L', date: '2026-07-01' },
-  { matchNumber: 79,  round: 'R32', homeTeamLabel: '1B', awayTeamLabel: '2A', date: '2026-07-02' },
-  { matchNumber: 80,  round: 'R32', homeTeamLabel: '1D', awayTeamLabel: '2C', date: '2026-07-02' },
-  { matchNumber: 81,  round: 'R32', homeTeamLabel: '1F', awayTeamLabel: '2E', date: '2026-07-03' },
-  { matchNumber: 82,  round: 'R32', homeTeamLabel: '1H', awayTeamLabel: '2G', date: '2026-07-03' },
-  { matchNumber: 83,  round: 'R32', homeTeamLabel: '1J', awayTeamLabel: '2I', date: '2026-07-04' },
-  { matchNumber: 84,  round: 'R32', homeTeamLabel: '1L', awayTeamLabel: '2K', date: '2026-07-04' },
-  { matchNumber: 85,  round: 'R32', homeTeamLabel: 'Best 3rd 1', awayTeamLabel: 'Best 3rd 2', date: '2026-07-05' },
-  { matchNumber: 86,  round: 'R32', homeTeamLabel: 'Best 3rd 3', awayTeamLabel: 'Best 3rd 4', date: '2026-07-05' },
-  { matchNumber: 87,  round: 'R32', homeTeamLabel: 'Best 3rd 5', awayTeamLabel: 'Best 3rd 6', date: '2026-07-06' },
-  { matchNumber: 88,  round: 'R32', homeTeamLabel: 'Best 3rd 7', awayTeamLabel: 'Best 3rd 8', date: '2026-07-06' },
+  // Round of 32 (matches 73-88) — official 2026 WC bracket
+  { matchNumber: 73,  round: 'R32', homeTeamLabel: '2A',           awayTeamLabel: '2B',           date: '2026-06-28' },
+  { matchNumber: 74,  round: 'R32', homeTeamLabel: '1E',           awayTeamLabel: '3rd A/B/C/D/F', date: '2026-06-29' },
+  { matchNumber: 75,  round: 'R32', homeTeamLabel: '1F',           awayTeamLabel: '2C',           date: '2026-06-29' },
+  { matchNumber: 76,  round: 'R32', homeTeamLabel: '1C',           awayTeamLabel: '2F',           date: '2026-06-29' },
+  { matchNumber: 77,  round: 'R32', homeTeamLabel: '1I',           awayTeamLabel: '3rd C/D/F/G/H', date: '2026-06-30' },
+  { matchNumber: 78,  round: 'R32', homeTeamLabel: '2E',           awayTeamLabel: '2I',           date: '2026-06-30' },
+  { matchNumber: 79,  round: 'R32', homeTeamLabel: '1A',           awayTeamLabel: '3rd C/E/F/H/I', date: '2026-06-30' },
+  { matchNumber: 80,  round: 'R32', homeTeamLabel: '1L',           awayTeamLabel: '3rd E/H/I/J/K', date: '2026-07-01' },
+  { matchNumber: 81,  round: 'R32', homeTeamLabel: '1D',           awayTeamLabel: '3rd B/E/F/I/J', date: '2026-07-01' },
+  { matchNumber: 82,  round: 'R32', homeTeamLabel: '1G',           awayTeamLabel: '3rd A/E/H/I/J', date: '2026-07-01' },
+  { matchNumber: 83,  round: 'R32', homeTeamLabel: '2K',           awayTeamLabel: '2L',           date: '2026-07-02' },
+  { matchNumber: 84,  round: 'R32', homeTeamLabel: '1H',           awayTeamLabel: '2J',           date: '2026-07-02' },
+  { matchNumber: 85,  round: 'R32', homeTeamLabel: '1B',           awayTeamLabel: '3rd E/F/G/I/J', date: '2026-07-02' },
+  { matchNumber: 86,  round: 'R32', homeTeamLabel: '1J',           awayTeamLabel: '2H',           date: '2026-07-03' },
+  { matchNumber: 87,  round: 'R32', homeTeamLabel: '1K',           awayTeamLabel: '3rd D/E/I/J/L', date: '2026-07-03' },
+  { matchNumber: 88,  round: 'R32', homeTeamLabel: '2D',           awayTeamLabel: '2G',           date: '2026-07-03' },
   // Round of 16 (matches 89-96)
-  { matchNumber: 89, round: 'R16', homeTeamLabel: 'W73', awayTeamLabel: 'W74', date: '2026-07-08' },
-  { matchNumber: 90, round: 'R16', homeTeamLabel: 'W75', awayTeamLabel: 'W76', date: '2026-07-08' },
-  { matchNumber: 91, round: 'R16', homeTeamLabel: 'W77', awayTeamLabel: 'W78', date: '2026-07-09' },
-  { matchNumber: 92, round: 'R16', homeTeamLabel: 'W79', awayTeamLabel: 'W80', date: '2026-07-09' },
-  { matchNumber: 93, round: 'R16', homeTeamLabel: 'W81', awayTeamLabel: 'W82', date: '2026-07-10' },
-  { matchNumber: 94, round: 'R16', homeTeamLabel: 'W83', awayTeamLabel: 'W84', date: '2026-07-10' },
-  { matchNumber: 95, round: 'R16', homeTeamLabel: 'W85', awayTeamLabel: 'W86', date: '2026-07-11' },
-  { matchNumber: 96, round: 'R16', homeTeamLabel: 'W87', awayTeamLabel: 'W88', date: '2026-07-11' },
+  { matchNumber: 89,  round: 'R16', homeTeamLabel: 'W74', awayTeamLabel: 'W77', date: '2026-07-04' },
+  { matchNumber: 90,  round: 'R16', homeTeamLabel: 'W73', awayTeamLabel: 'W75', date: '2026-07-04' },
+  { matchNumber: 91,  round: 'R16', homeTeamLabel: 'W76', awayTeamLabel: 'W78', date: '2026-07-05' },
+  { matchNumber: 92,  round: 'R16', homeTeamLabel: 'W79', awayTeamLabel: 'W80', date: '2026-07-05' },
+  { matchNumber: 93,  round: 'R16', homeTeamLabel: 'W83', awayTeamLabel: 'W84', date: '2026-07-06' },
+  { matchNumber: 94,  round: 'R16', homeTeamLabel: 'W81', awayTeamLabel: 'W82', date: '2026-07-06' },
+  { matchNumber: 95,  round: 'R16', homeTeamLabel: 'W86', awayTeamLabel: 'W88', date: '2026-07-07' },
+  { matchNumber: 96,  round: 'R16', homeTeamLabel: 'W85', awayTeamLabel: 'W87', date: '2026-07-07' },
   // Quarter-finals (matches 97-100)
-  { matchNumber: 97,  round: 'QF', homeTeamLabel: 'W89', awayTeamLabel: 'W90', date: '2026-07-14' },
-  { matchNumber: 98,  round: 'QF', homeTeamLabel: 'W91', awayTeamLabel: 'W92', date: '2026-07-14' },
-  { matchNumber: 99,  round: 'QF', homeTeamLabel: 'W93', awayTeamLabel: 'W94', date: '2026-07-15' },
-  { matchNumber: 100, round: 'QF', homeTeamLabel: 'W95', awayTeamLabel: 'W96', date: '2026-07-15' },
+  { matchNumber: 97,  round: 'QF', homeTeamLabel: 'W89', awayTeamLabel: 'W90', date: '2026-07-09' },
+  { matchNumber: 98,  round: 'QF', homeTeamLabel: 'W93', awayTeamLabel: 'W94', date: '2026-07-10' },
+  { matchNumber: 99,  round: 'QF', homeTeamLabel: 'W91', awayTeamLabel: 'W92', date: '2026-07-11' },
+  { matchNumber: 100, round: 'QF', homeTeamLabel: 'W95', awayTeamLabel: 'W96', date: '2026-07-11' },
   // Semi-finals (matches 101-102)
-  { matchNumber: 101, round: 'SF', homeTeamLabel: 'W97',  awayTeamLabel: 'W98',  date: '2026-07-18' },
-  { matchNumber: 102, round: 'SF', homeTeamLabel: 'W99',  awayTeamLabel: 'W100', date: '2026-07-19' },
+  { matchNumber: 101, round: 'SF', homeTeamLabel: 'W97',  awayTeamLabel: 'W98',  date: '2026-07-14' },
+  { matchNumber: 102, round: 'SF', homeTeamLabel: 'W99',  awayTeamLabel: 'W100', date: '2026-07-15' },
   // 3rd place (match 103)
-  { matchNumber: 103, round: '3rd', homeTeamLabel: 'L101', awayTeamLabel: 'L102', date: '2026-07-25' },
+  { matchNumber: 103, round: '3rd', homeTeamLabel: 'L101', awayTeamLabel: 'L102', date: '2026-07-18' },
   // Final (match 104)
-  { matchNumber: 104, round: 'Final', homeTeamLabel: 'W101', awayTeamLabel: 'W102', date: '2026-07-26' },
+  { matchNumber: 104, round: 'Final', homeTeamLabel: 'W101', awayTeamLabel: 'W102', date: '2026-07-19' },
 ];
 
 async function main() {
