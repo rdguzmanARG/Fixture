@@ -11,7 +11,9 @@
       "mcp__context7__resolve-library-id",
       "mcp__context7__query-docs",
       "Bash(yarn prisma:generate)",
-      "Bash(del *)"
+      "Bash(del *)",
+      "Bash(npm show *)",
+      "Bash(yarn install *)"
     ]
   }
 }
