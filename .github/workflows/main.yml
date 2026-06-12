@@ -49,6 +49,9 @@ jobs:
           cp -r node_modules/@prisma/. ./fixture/node_modules/@prisma/
           cp -r node_modules/.prisma ./fixture/node_modules/.prisma
           cp -r node_modules/mariadb ./fixture/node_modules/mariadb
+          cp -r node_modules/denque ./fixture/node_modules/denque
+          cp -r node_modules/iconv-lite ./fixture/node_modules/iconv-lite
+          cp -r node_modules/lru-cache ./fixture/node_modules/lru-cache
 
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
