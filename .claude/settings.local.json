@@ -23,7 +23,12 @@
       "PowerShell(Test-NetConnection *)",
       "Bash(Read \"C:\\\\Users\\\\ricar\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--01-Codigo-Aticus-Fixture\\\\15e238cd-98d9-43ff-88aa-6350e0926fd1\\\\tasks\\\\bdkhtj90l.output\")",
       "Bash(Get-ChildItem -Recurse -Filter \"*.css\" \"D:\\\\01-Codigo\\\\Aticus\\\\Fixture\\\\client\")",
-      "PowerShell(Get-ChildItem -Recurse \"D:\\\\01-Codigo\\\\Aticus\\\\Fixture\\\\client\\\\src\" | Where-Object { $_.Extension -in \".css\",\".scss\",\".sass\",\".less\" } | Select-Object FullName)"
+      "PowerShell(Get-ChildItem -Recurse \"D:\\\\01-Codigo\\\\Aticus\\\\Fixture\\\\client\\\\src\" | Where-Object { $_.Extension -in \".css\",\".scss\",\".sass\",\".less\" } | Select-Object FullName)",
+      "WebSearch",
+      "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:www.toffeeweb.com)",
+      "WebFetch(domain:www.espn.com)",
+      "WebFetch(domain:www.zoho.com)"
     ]
   }
 }
