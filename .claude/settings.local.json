@@ -9,7 +9,9 @@
       "PowerShell(Get-ChildItem -Path \"D:\\\\01-Codigo\\\\Aticus\\\\Fixture\\\\client\" -Recurse -File | Where-Object { $_.Extension -match '\\\\.\\(jsx?|tsx?|css|scss|sass\\)$' } | Select-Object FullName | Sort-Object)",
       "mcp__ide__getDiagnostics",
       "mcp__context7__resolve-library-id",
-      "mcp__context7__query-docs"
+      "mcp__context7__query-docs",
+      "Bash(yarn prisma:generate)",
+      "Bash(del *)"
     ]
   }
 }

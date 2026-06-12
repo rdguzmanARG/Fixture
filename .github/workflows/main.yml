@@ -36,11 +36,6 @@ jobs:
           sed -i "s|__DATABASE_URL__|${{ secrets.DATABASE_URL }}|g" ./fixture/web.config
           sed -i "s|__JWT_SECRET__|${{ secrets.JWT_SECRET }}|g" ./fixture/web.config
           sed -i "s|__CLIENT_ORIGIN__|${{ secrets.CLIENT_ORIGIN }}|g" ./fixture/web.config
-          sed -i "s|__MP_ACCESS_TOKEN__|${{ secrets.MP_ACCESS_TOKEN }}|g" ./fixture/web.config
-          sed -i "s|__MP_WEBHOOK_SECRET__|${{ secrets.MP_WEBHOOK_SECRET }}|g" ./fixture/web.config
-          sed -i "s|__PAYPAL_CLIENT_ID__|${{ secrets.PAYPAL_CLIENT_ID }}|g" ./fixture/web.config
-          sed -i "s|__PAYPAL_CLIENT_SECRET__|${{ secrets.PAYPAL_CLIENT_SECRET }}|g" ./fixture/web.config
-          sed -i "s|__PAYPAL_WEBHOOK_ID__|${{ secrets.PAYPAL_WEBHOOK_ID }}|g" ./fixture/web.config
           cp -r client/dist/. ./fixture/client/dist/
           cp -r server/prisma ./fixture/server/prisma
           cp server/prisma.config.ts ./fixture/server/prisma.config.ts
