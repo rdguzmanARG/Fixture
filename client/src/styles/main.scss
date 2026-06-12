@@ -197,7 +197,7 @@ input { font-family: inherit; }
   font-size: .875rem;
   color: $grey-400;
 
-  a { color: $green; font-weight: 600; }
+  a { color: $green-dark; font-weight: 600; }
 }
 
 // ── Page header ──────────────────────────────────────────────────────────────
@@ -257,6 +257,21 @@ input { font-family: inherit; }
     gap: .75rem;
 
     h2 { font-size: 1rem; letter-spacing: .05em; }
+
+    &--toggle {
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+
+      &:hover { filter: brightness(1.1); }
+    }
+  }
+
+  &__chevron {
+    margin-left: auto;
+    font-size: .75rem;
+    opacity: .8;
   }
 
   &__badge {
@@ -334,7 +349,7 @@ input { font-family: inherit; }
   background: $white;
 
   &--saved    { border-color: $blue; }
-  &--exact    { border-color: $green-light; background: #f0fff4; }
+  &--exact    { border-color: $green-light; background: #f2f2f2; }
   &--correct  { border-color: $yellow; background: #fff9db; }
   &--wrong    { border-color: $grey-200; background: $grey-50; }
 
@@ -578,7 +593,7 @@ input { font-family: inherit; }
     color: $green-dark;
   }
 
-  &__highlight td { background: #f0fff4 !important; }
+  &__highlight td { background: #f2f2f2 !important; }
 }
 
 // ── Loading/empty states ──────────────────────────────────────────────────────

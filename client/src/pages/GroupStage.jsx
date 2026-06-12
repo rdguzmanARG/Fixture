@@ -4,6 +4,26 @@ import MatchCard from '../components/MatchCard.jsx';
 
 const GROUP_LETTERS = ['A','B','C','D','E','F','G','H','I','J','K','L'];
 
+function GroupSection({ activeGroup, teams, groupMatches }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="group-section">
+      <button
+        className="group-section__header group-section__header--toggle"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+      >
+        <span className="group-section__badge">GRUPO {activeGroup}</span>
+        <h2>Clasificación (según tus pronósticos)</h2>
+        <span className="group-section__chevron">{open ? '▲' : '▼'}</span>
+      </button>
+      {open && teams.length > 0 && (
+        <GroupTable teams={teams} matches={groupMatches} />
+      )}
+    </div>
+  );
+}
+
 export default function GroupStage() {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -60,15 +80,8 @@ export default function GroupStage() {
           ))}
         </div>
 
-        <div className="group-section">
-          <div className="group-section__header">
-            <span className="group-section__badge">GRUPO {activeGroup}</span>
-            <h2>Clasificación (según tus pronósticos)</h2>
-          </div>
-          {teams.length > 0 && (
-            <GroupTable teams={teams} matches={groupMatches} />
-          )}
-        </div>
+        <GroupSection activeGroup={activeGroup} teams={teams} groupMatches={groupMatches} />
+
 
         {[
           { label: 'Fecha 1', items: matchDay1 },

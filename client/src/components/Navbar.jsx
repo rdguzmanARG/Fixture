@@ -18,7 +18,7 @@ export default function Navbar() {
           </ul>
           <div className="navbar__user">
             <span>{user.username}</span>
-            {user.isAdmin && <small style={{ color: '#f0c040' }}>(admin)</small>}
+            {user.isAdmin && <small style={{ color: '#e8b84b' }}>(admin)</small>}
             <button className="navbar__logout" onClick={logout}>Salir</button>
           </div>
         </div>
