@@ -2,10 +2,15 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
 import authRouter from './routes/auth.js';
 import matchesRouter from './routes/matches.js';
 import predictionsRouter from './routes/predictions.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const clientDist = join(__dirname, '../../client/dist');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -20,6 +25,9 @@ app.use(cookieParser());
 app.use('/api/auth', authRouter);
 app.use('/api/matches', matchesRouter);
 app.use('/api/predictions', predictionsRouter);
+
+app.use(express.static(clientDist));
+app.get('*', (_req, res) => res.sendFile(join(clientDist, 'index.html')));
 
 app.use((err, _req, res, _next) => {
   console.error(err);
