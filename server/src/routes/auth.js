@@ -8,37 +8,37 @@ import { authenticate } from '../middleware/auth.js';
 const router = Router();
 
 router.post('/register', async (req, res) => {
-  const { email, name, password } = req.body;
-  if (!email || !name || !password)
-    return res.status(400).json({ error: 'Email, name, and password are required' });
+  const { username, password } = req.body;
+  if (!username || !password)
+    return res.status(400).json({ error: 'Username and password are required' });
 
-  const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) return res.status(409).json({ error: 'Email already registered' });
+  const existing = await prisma.user.findUnique({ where: { username } });
+  if (existing) return res.status(409).json({ error: 'Username already taken' });
 
   const hashed = await bcrypt.hash(password, 10);
   const user = await prisma.user.create({
-    data: { email, name, password: hashed },
+    data: { username, password: hashed },
   });
 
-  const token = signToken({ userId: user.id, email: user.email, name: user.name, isAdmin: user.isAdmin });
+  const token = signToken({ userId: user.id, username: user.username, isAdmin: user.isAdmin });
   res.cookie('token', token, cookieOptions);
-  res.status(201).json({ id: user.id, email: user.email, name: user.name, isAdmin: user.isAdmin });
+  res.status(201).json({ id: user.id, username: user.username, isAdmin: user.isAdmin });
 });
 
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password)
-    return res.status(400).json({ error: 'Email and password are required' });
+  const { username, password } = req.body;
+  if (!username || !password)
+    return res.status(400).json({ error: 'Username and password are required' });
 
-  const user = await prisma.user.findUnique({ where: { email } });
+  const user = await prisma.user.findUnique({ where: { username } });
   if (!user) return res.status(401).json({ error: 'Invalid credentials' });
 
   const valid = await bcrypt.compare(password, user.password);
   if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
 
-  const token = signToken({ userId: user.id, email: user.email, name: user.name, isAdmin: user.isAdmin });
+  const token = signToken({ userId: user.id, username: user.username, isAdmin: user.isAdmin });
   res.cookie('token', token, cookieOptions);
-  res.json({ id: user.id, email: user.email, name: user.name, isAdmin: user.isAdmin });
+  res.json({ id: user.id, username: user.username, isAdmin: user.isAdmin });
 });
 
 router.post('/logout', (_req, res) => {

@@ -160,13 +160,12 @@ async function main() {
   const hashedPassword = await bcrypt.hash('Admin1234', 10);
   await prisma.user.create({
     data: {
-      email: 'admin@fixture.com',
-      name: 'Admin',
+      username: 'admin',
       password: hashedPassword,
       isAdmin: true,
     },
   });
-  console.log('Admin user created: admin@fixture.com / Admin1234');
+  console.log('Admin user created: admin / Admin1234');
 
   // Create teams
   const createdTeams = {};

@@ -12,12 +12,12 @@ export function AuthProvider({ children }) {
       .catch(() => setUser(null));
   }, []);
 
-  async function login(email, password) {
+  async function login(username, password) {
     const r = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ username, password }),
     });
     const data = await r.json();
     if (!r.ok) throw new Error(data.error || 'Login failed');
@@ -25,12 +25,12 @@ export function AuthProvider({ children }) {
     return data;
   }
 
-  async function register(email, name, password) {
+  async function register(username, password) {
     const r = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({ email, name, password }),
+      body: JSON.stringify({ username, password }),
     });
     const data = await r.json();
     if (!r.ok) throw new Error(data.error || 'Registration failed');

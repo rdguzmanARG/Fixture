@@ -17,7 +17,7 @@ export default function Navbar() {
             <li><NavLink to="/leaderboard">Clasificación</NavLink></li>
           </ul>
           <div className="navbar__user">
-            <span>{user.name}</span>
+            <span>{user.username}</span>
             {user.isAdmin && <small style={{ color: '#f0c040' }}>(admin)</small>}
             <button className="navbar__logout" onClick={logout}>Salir</button>
           </div>

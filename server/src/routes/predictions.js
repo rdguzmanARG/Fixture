@@ -46,7 +46,7 @@ router.get('/leaderboard', authenticate, async (req, res) => {
     where: { isAdmin: false },
     select: {
       id: true,
-      name: true,
+      username: true,
       predictions: {
         select: { points: true, homeScore: true, awayScore: true },
       },
@@ -60,7 +60,7 @@ router.get('/leaderboard', authenticate, async (req, res) => {
     const total = scored.reduce((sum, p) => sum + (p.points ?? 0), 0);
     return {
       id: u.id,
-      name: u.name,
+      username: u.username,
       points: total,
       exact,
       correct,

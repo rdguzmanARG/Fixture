@@ -55,7 +55,7 @@ export default function Leaderboard() {
                       </span>
                     </td>
                     <td>
-                      <span className="leaderboard__name">{entry.name}</span>
+                      <span className="leaderboard__name">{entry.username}</span>
                       {entry.id === user?.userId && (
                         <span className="leaderboard__you">you</span>
                       )}

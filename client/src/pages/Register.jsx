@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext.jsx';
 
 export default function Register() {
   const { register } = useAuth();
-  const [form, setForm] = useState({ email: '', name: '', password: '' });
+  const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -15,7 +15,7 @@ export default function Register() {
     setError('');
     setLoading(true);
     try {
-      await register(form.email, form.name, form.password);
+      await register(form.username, form.password);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -31,12 +31,8 @@ export default function Register() {
         {error && <div className="error-msg">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Tu nombre</label>
-            <input type="text" value={form.name} onChange={set('name')} required autoFocus placeholder="ej. Ricardo" />
-          </div>
-          <div className="form-group">
-            <label>Correo electrónico</label>
-            <input type="email" value={form.email} onChange={set('email')} required />
+            <label>Usuario</label>
+            <input type="text" value={form.username} onChange={set('username')} required autoFocus placeholder="ej. ricardo26" />
           </div>
           <div className="form-group">
             <label>Contraseña</label>

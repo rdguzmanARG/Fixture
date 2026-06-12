@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext.jsx';
 
 export default function Login() {
   const { login } = useAuth();
-  const [form, setForm] = useState({ email: '', password: '' });
+  const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -15,7 +15,7 @@ export default function Login() {
     setError('');
     setLoading(true);
     try {
-      await login(form.email, form.password);
+      await login(form.username, form.password);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -31,8 +31,8 @@ export default function Login() {
         {error && <div className="error-msg">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Correo electrónico</label>
-            <input type="email" value={form.email} onChange={set('email')} required autoFocus />
+            <label>Usuario</label>
+            <input type="text" value={form.username} onChange={set('username')} required autoFocus />
           </div>
           <div className="form-group">
             <label>Contraseña</label>
