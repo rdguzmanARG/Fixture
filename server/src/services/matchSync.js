@@ -69,3 +69,26 @@ export async function syncMatchResults() {
 
   if (updated > 0) console.log(`[sync] Updated ${updated} match result(s)`);
 }
+
+export async function lockStartedMatches() {
+  const apiKey = process.env.FOOTBALL_DATA_API_KEY;
+  if (!apiKey) {
+    console.warn('[lock] FOOTBALL_DATA_API_KEY not set — skipping');
+    return;
+  }
+
+  const { data } = await axios.get(`${API_BASE}/competitions/${COMPETITION}/matches`, {
+    headers: { 'X-Auth-Token': apiKey },
+    params: { status: 'IN_PLAY,PAUSED,FINISHED' },
+  });
+
+  const externalIds = (data.matches ?? []).map((m) => String(m.id));
+  if (externalIds.length === 0) return;
+
+  const { count } = await prisma.match.updateMany({
+    where: { externalId: { in: externalIds }, isLocked: false },
+    data: { isLocked: true },
+  });
+
+  if (count > 0) console.log(`[lock] Locked ${count} match(es)`);
+}
