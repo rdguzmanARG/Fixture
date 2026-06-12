@@ -2,15 +2,13 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { join } from 'path';
 
 import authRouter from './routes/auth.js';
 import matchesRouter from './routes/matches.js';
 import predictionsRouter from './routes/predictions.js';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const clientDist = join(__dirname, '../../client/dist');
+const clientDist = join(process.cwd(), 'client/dist');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
