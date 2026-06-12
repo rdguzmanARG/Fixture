@@ -12,17 +12,20 @@
     "prisma:migrate:deploy": "prisma migrate deploy",
     "db:push": "prisma db push",
     "db:seed": "node --env-file=.env prisma/seed.js",
+    "db:init-sync": "node --env-file=.env src/scripts/initExternalIds.js",
     "db:studio": "prisma studio"
   },
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.0.0",
     "@prisma/client": "^7.0.0",
-    "mariadb": "^3.4.5",
+    "axios": "^1.17.0",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "mariadb": "^3.4.5",
+    "node-cron": "^4.2.1"
   },
   "devDependencies": {
     "prisma": "^7.0.0"

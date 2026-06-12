@@ -43,6 +43,8 @@ model Match {
   homeScore     Int?
   awayScore     Int?
   isLocked      Boolean      @default(false)
+  externalId    String?      @unique
+  scoreReversed Boolean      @default(false)
   predictions   Prediction[]
 }
 

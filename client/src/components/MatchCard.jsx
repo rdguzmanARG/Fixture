@@ -186,59 +186,61 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
         </div>
       )}
 
-      <div className="match-card__prediction">
-        {locked && !user?.isAdmin && (
-          <span className="match-card__locked">Cerrado</span>
-        )}
-        <input
-          className={`match-card__score-input${hasPred && !dirty ? ' match-card__score-input--saved' : ''}`}
-          type="number"
-          min="0"
-          max="99"
-          value={home}
-          onChange={(e) => { setHome(e.target.value); setDirty(true); }}
-          placeholder="0"
-          disabled={locked}
-          readOnly={!locked && hasPred && !dirty}
-        />
-        <span className="match-card__dash">–</span>
-        <input
-          className={`match-card__score-input${hasPred && !dirty ? ' match-card__score-input--saved' : ''}`}
-          type="number"
-          min="0"
-          max="99"
-          value={away}
-          onChange={(e) => { setAway(e.target.value); setDirty(true); }}
-          placeholder="0"
-          disabled={locked}
-          readOnly={!locked && hasPred && !dirty}
-        />
-        {(!hasPred || dirty) && (
-          <button
-            className="match-card__save"
-            onClick={savePrediction}
-            disabled={saving || home === '' || away === ''}
-          >
-            {saving ? '…' : 'Guardar'}
-          </button>
-        )}
-        {hasPred && !dirty && !locked && (
-          <button
-            className="match-card__delete"
-            onClick={deletePrediction}
-            disabled={deleting}
-            title="Borrar pronóstico"
-          >
-            {deleting ? '…' : '✕'}
-          </button>
-        )}
-        {saveError && <span className="match-card__save-error">{saveError}</span>}
-        {pred?.points != null && (
-          <span className={`match-card__points-badge match-card__points-badge--${pred.points}`}>
-            {pred.points}pt
-          </span>
-        )}
-      </div>
+      {!user?.isAdmin && (
+        <div className="match-card__prediction">
+          {locked && (
+            <span className="match-card__locked">Cerrado</span>
+          )}
+          <input
+            className={`match-card__score-input${hasPred && !dirty ? ' match-card__score-input--saved' : ''}`}
+            type="number"
+            min="0"
+            max="99"
+            value={home}
+            onChange={(e) => { setHome(e.target.value); setDirty(true); }}
+            placeholder="0"
+            disabled={locked}
+            readOnly={!locked && hasPred && !dirty}
+          />
+          <span className="match-card__dash">–</span>
+          <input
+            className={`match-card__score-input${hasPred && !dirty ? ' match-card__score-input--saved' : ''}`}
+            type="number"
+            min="0"
+            max="99"
+            value={away}
+            onChange={(e) => { setAway(e.target.value); setDirty(true); }}
+            placeholder="0"
+            disabled={locked}
+            readOnly={!locked && hasPred && !dirty}
+          />
+          {(!hasPred || dirty) && (
+            <button
+              className="match-card__save"
+              onClick={savePrediction}
+              disabled={saving || home === '' || away === ''}
+            >
+              {saving ? '…' : 'Guardar'}
+            </button>
+          )}
+          {hasPred && !dirty && !locked && (
+            <button
+              className="match-card__delete"
+              onClick={deletePrediction}
+              disabled={deleting}
+              title="Borrar pronóstico"
+            >
+              {deleting ? '…' : '✕'}
+            </button>
+          )}
+          {saveError && <span className="match-card__save-error">{saveError}</span>}
+          {pred?.points != null && (
+            <span className={`match-card__points-badge match-card__points-badge--${pred.points}`}>
+              {pred.points}pt
+            </span>
+          )}
+        </div>
+      )}
 
       {user?.isAdmin && (
         <div className="match-card__admin">

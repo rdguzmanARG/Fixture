@@ -1,6 +1,7 @@
 import { Router } from "express";
 import prisma from "../lib/prisma.js";
 import { authenticate, requireAdmin } from "../middleware/auth.js";
+import { calculatePoints } from "../services/scoring.js";
 
 const router = Router();
 
@@ -58,22 +59,13 @@ router.put("/:id/result", authenticate, requireAdmin, async (req, res) => {
     include: { predictions: true },
   });
 
-  const actualResult = Math.sign(match.homeScore - match.awayScore);
-
   await Promise.all(
-    match.predictions.map((p) => {
-      const predResult = Math.sign(p.homeScore - p.awayScore);
-      let points = 0;
-      if (p.homeScore === match.homeScore && p.awayScore === match.awayScore) {
-        points = 5;
-      } else if (predResult === actualResult) {
-        points = 3;
-      }
-      return prisma.prediction.update({
+    match.predictions.map((p) =>
+      prisma.prediction.update({
         where: { id: p.id },
-        data: { points },
-      });
-    }),
+        data: { points: calculatePoints(p, match) },
+      })
+    ),
   );
 
   res.json({ ok: true, matchNumber: match.matchNumber });
