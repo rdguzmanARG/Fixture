@@ -21,7 +21,7 @@ export default function Leaderboard() {
       <div className="page-header">
         <div className="container">
           <h1>🏅 Clasificación</h1>
-          <p>{board.length} participantes · Resultado exacto = 3pts · Resultado correcto = 1pt</p>
+          <p>{board.length} participantes · Resultado exacto = 5pts · Resultado correcto = 3pt</p>
         </div>
       </div>
       <div className="container">

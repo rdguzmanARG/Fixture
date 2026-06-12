@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import GroupTable from '../components/GroupTable.jsx';
 import MatchCard from '../components/MatchCard.jsx';
 
-const GROUP_LETTERS = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+const GROUP_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
 function GroupSection({ activeGroup, teams, groupMatches }) {
   const [open, setOpen] = useState(false);
@@ -14,7 +14,7 @@ function GroupSection({ activeGroup, teams, groupMatches }) {
         aria-expanded={open}
       >
         <span className="group-section__badge">GRUPO {activeGroup}</span>
-        <h2>Clasificación (según tus pronósticos)</h2>
+        <h2>Clasificación</h2>
         <span className="group-section__chevron">{open ? '▲' : '▼'}</span>
       </button>
       {open && teams.length > 0 && (
