@@ -48,7 +48,7 @@ jobs:
           cp -r client/dist/. ./fixture/client/dist/
           cp -r server/prisma ./fixture/server/prisma
           cp server/prisma.config.js ./fixture/server/prisma.config.js
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > ./fixture/server/.env
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}?connection_limit=10" > ./fixture/server/.env
           mkdir -p ./fixture/node_modules/@prisma
           cp -r node_modules/@prisma/. ./fixture/node_modules/@prisma/
           cp -r node_modules/.prisma ./fixture/node_modules/.prisma
