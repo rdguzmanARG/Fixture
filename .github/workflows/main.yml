@@ -47,10 +47,8 @@ jobs:
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > ./fixture/server/.env
           mkdir -p ./fixture/node_modules/@prisma
           cp -r node_modules/@prisma/. ./fixture/node_modules/@prisma/
-          cp -r server/node_modules/@prisma/client ./fixture/node_modules/@prisma/client
-          cp -r server/node_modules/@prisma/adapter-mariadb ./fixture/node_modules/@prisma/adapter-mariadb
-          cp -r server/node_modules/.prisma ./fixture/node_modules/.prisma
-          cp -r server/node_modules/mariadb ./fixture/node_modules/mariadb
+          cp -r node_modules/.prisma ./fixture/node_modules/.prisma
+          cp -r node_modules/mariadb ./fixture/node_modules/mariadb
 
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
