@@ -24,10 +24,9 @@ export default function AllMatches() {
   if (loading) return <div className="loading">Cargando fixture…</div>;
 
   const hasTeams = (m) => m.homeTeam && m.awayTeam;
-
   const filtered = showAll
     ? matches.filter(hasTeams)
-    : matches.filter((m) => hasTeams(m) && !m.userPrediction);
+    : matches.filter((m) => hasTeams(m) && !m.awayScore && !m.homeScore);
 
   const sorted = [...filtered].sort((a, b) => {
     if (!a.date) return 1;
@@ -67,7 +66,7 @@ export default function AllMatches() {
               checked={showAll}
               onChange={(e) => setShowAll(e.target.checked)}
             />
-            Mostrar partidos con pronóstico
+            Incluir partidos finalizados
           </label>
         </div>
 
