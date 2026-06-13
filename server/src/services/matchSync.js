@@ -75,22 +75,10 @@ export async function syncMatchResults() {
 }
 
 export async function lockStartedMatches() {
-  const apiKey = process.env.FOOTBALL_DATA_API_KEY;
-  if (!apiKey) {
-    console.warn('[lock] FOOTBALL_DATA_API_KEY not set — skipping');
-    return;
-  }
-
-  const { data } = await axios.get(`${API_BASE}/competitions/${COMPETITION}/matches`, {
-    headers: { 'X-Auth-Token': apiKey },
-    params: { status: 'IN_PLAY,PAUSED,FINISHED' },
-  });
-
-  const externalIds = (data.matches ?? []).map((m) => String(m.id));
-  if (externalIds.length === 0) return;
+  const cutoff = new Date(Date.now() + 5 * 60 * 1000);
 
   const { count } = await prisma.match.updateMany({
-    where: { externalId: { in: externalIds }, isLocked: false },
+    where: { date: { lte: cutoff }, isLocked: false },
     data: { isLocked: true },
   });
 
