@@ -49,6 +49,11 @@ export default function MatchPredictions() {
   const awayFlag = match.awayTeam?.flag;
   const hasResult = match.homeScore != null && match.awayScore != null;
 
+  const outcomeRank = (p) => (p.homeScore > p.awayScore ? 0 : p.homeScore === p.awayScore ? 1 : 2);
+  const sortedPredictions = hasResult
+    ? predictions
+    : [...predictions].sort((a, b) => outcomeRank(a) - outcomeRank(b));
+
   return (
     <div>
       <div className="page-header page-header--sticky">
@@ -84,7 +89,7 @@ export default function MatchPredictions() {
           </div>
         ) : (
           <div className="match-preds__list">
-            {predictions.map((pred) => (
+            {sortedPredictions.map((pred) => (
               <div
                 key={pred.id}
                 className={`match-preds__item match-preds__item--${pred.points === 5 ? 'exact' : pred.points === 3 ? 'correct' : pred.points === 0 ? 'wrong' : 'pending'}`}
