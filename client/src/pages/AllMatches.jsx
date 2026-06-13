@@ -23,9 +23,11 @@ export default function AllMatches() {
 
   if (loading) return <div className="loading">Cargando fixture…</div>;
 
+  const hasTeams = (m) => m.homeTeam && m.awayTeam;
+
   const filtered = showAll
-    ? matches
-    : matches.filter((m) => !m.userPrediction);
+    ? matches.filter(hasTeams)
+    : matches.filter((m) => hasTeams(m) && !m.userPrediction);
 
   const sorted = [...filtered].sort((a, b) => {
     if (!a.date) return 1;
@@ -45,14 +47,15 @@ export default function AllMatches() {
     groupMap.get(key).items.push(m);
   }
 
-  const withoutPrediction = matches.filter((m) => !m.userPrediction).length;
+  const withoutPrediction = matches.filter((m) => hasTeams(m) && !m.userPrediction).length;
+  const totalWithTeams = matches.filter(hasTeams).length;
 
   return (
     <div>
       <div className="page-header">
         <div className="container">
           <h1>⚽ Todos los Partidos</h1>
-          <p>Sin pronóstico: {withoutPrediction} / {matches.length} partidos</p>
+          <p>Sin pronóstico: {withoutPrediction} / {totalWithTeams} partidos</p>
         </div>
       </div>
 

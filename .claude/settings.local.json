@@ -28,7 +28,11 @@
       "WebFetch(domain:en.wikipedia.org)",
       "WebFetch(domain:www.toffeeweb.com)",
       "WebFetch(domain:www.espn.com)",
-      "WebFetch(domain:www.zoho.com)"
+      "WebFetch(domain:www.zoho.com)",
+      "WebFetch(domain:www.footylogos.com)",
+      "WebFetch(domain:football-logos.cc)",
+      "PowerShell($url = \"https://assets.football-logos.cc/logos/tournaments/1500x1500/fifa-world-cup-2026.31d2489d.png\"; $out = \"D:\\\\01-Codigo\\\\Aticus\\\\Fixture\\\\client\\\\src\\\\assets\\\\wc2026-logo.png\"; Invoke-WebRequest -Uri $url -OutFile $out -UseBasicParsing; if \\(Test-Path $out\\) { $size = \\(Get-Item $out\\).Length; Write-Output \"Downloaded: $size bytes\" } else { Write-Output \"Failed\" })",
+      "PowerShell(New-Item *)"
     ]
   }
 }

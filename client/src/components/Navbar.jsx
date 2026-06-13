@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
+import wc2026Logo from '../assets/wc2026-logo.png';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -10,7 +11,10 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="container">
         <div className="navbar__inner">
-          <span className="navbar__brand">⚽ Mundial 2026</span>
+          <div className="navbar__brand">
+            <img src={wc2026Logo} alt="FIFA World Cup 2026" className="navbar__brand-logo" />
+            <span className="navbar__brand-title">FIFA World Cup 2026</span>
+          </div>
           <ul className="navbar__nav">
             <li><NavLink to="/all">Todos</NavLink></li>
             <li><NavLink to="/groups">Grupos</NavLink></li>

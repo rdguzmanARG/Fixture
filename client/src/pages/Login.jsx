@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
+import wc2026Logo from '../assets/wc2026-logo.png';
 
 export default function Login() {
   const { login } = useAuth();
@@ -26,8 +27,10 @@ export default function Login() {
   return (
     <div className="auth-page">
       <div className="auth-page__card">
-        <div className="auth-page__logo">⚽</div>
-        <h1>Mundial 2026</h1>
+        <div className="auth-page__logo">
+          <img src={wc2026Logo} alt="FIFA World Cup 2026" className="auth-page__brand-logo" />
+          <span className="auth-page__brand-title">FIFA World Cup 2026</span>
+        </div>
         {error && <div className="error-msg">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">

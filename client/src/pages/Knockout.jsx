@@ -27,41 +27,50 @@ export default function Knockout() {
 
   if (loading) return <div className="loading">Cargando eliminatorias…</div>;
 
-  const completedCount = matches.filter((m) => m.userPrediction).length;
+  const hasTeams = (m) => m.homeTeam && m.awayTeam;
+  const assignedMatches = matches.filter(hasTeams);
+  const completedCount = assignedMatches.filter((m) => m.userPrediction).length;
 
   return (
     <div>
       <div className="page-header">
         <div className="container">
           <h1>🏆 Fase Eliminatoria</h1>
-          <p>Pronósticos: {completedCount} / {matches.length} partidos</p>
+          <p>Pronósticos: {completedCount} / {assignedMatches.length} partidos</p>
         </div>
       </div>
       <div className="container">
-        <div className="bracket">
-          {ROUNDS.map(({ key, label }) => {
-            const roundMatches = matches.filter((m) => m.round === key);
-            if (roundMatches.length === 0) return null;
-            return (
-              <div key={key} className="bracket__round">
-                <div className="bracket__round-title">
-                  {label}
-                  <span className="round-badge">{roundMatches.length} {roundMatches.length === 1 ? 'partido' : 'partidos'}</span>
+        {assignedMatches.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-state__icon">⏳</div>
+            <div className="empty-state__text">Los equipos de la fase eliminatoria aún no están definidos. Vuelve cuando finalice la fase de grupos.</div>
+          </div>
+        ) : (
+          <div className="bracket">
+            {ROUNDS.map(({ key, label }) => {
+              const roundMatches = assignedMatches.filter((m) => m.round === key);
+              if (roundMatches.length === 0) return null;
+              return (
+                <div key={key} className="bracket__round">
+                  <div className="bracket__round-title">
+                    {label}
+                    <span className="round-badge">{roundMatches.length} {roundMatches.length === 1 ? 'partido' : 'partidos'}</span>
+                  </div>
+                  <div className="bracket__grid">
+                    {roundMatches.map((m) => (
+                      <MatchCard
+                        key={m.id}
+                        match={m}
+                        onPredictionSaved={load}
+                        onResultSet={load}
+                      />
+                    ))}
+                  </div>
                 </div>
-                <div className="bracket__grid">
-                  {roundMatches.map((m) => (
-                    <MatchCard
-                      key={m.id}
-                      match={m}
-                      onPredictionSaved={load}
-                      onResultSet={load}
-                    />
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
