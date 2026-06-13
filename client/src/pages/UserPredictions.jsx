@@ -88,14 +88,19 @@ export default function UserPredictions() {
               return (
                 <div key={pred.id} className={`user-pred__item user-pred__item--${pred.points === 5 ? 'exact' : pred.points === 3 ? 'correct' : pred.points === 0 ? 'wrong' : 'pending'}`}>
                   <div className="user-pred__meta">
-                    <span className="user-pred__round">{m.round}{m.group ? ` · Grupo ${m.group}` : ''}</span>
-                    <span className="user-pred__date">{formatDate(m.date)}</span>
+                    <div className="user-pred__meta-info">
+                      <span className="user-pred__round">{m.round}{m.group ? ` · ${m.group}` : ''}</span>
+                      <span className="user-pred__date">{formatDate(m.date)}</span>
+                    </div>
+                    <div className="user-pred__points">
+                      {pointsBadge(pred.points)}
+                    </div>
                   </div>
 
                   <div className="user-pred__match">
-                    <div className="user-pred__team">
-                      <FlagImg code={homeFlag} name={homeName} />
+                    <div className="user-pred__team user-pred__team--home">
                       <span>{homeName}</span>
+                      <FlagImg code={homeFlag} name={homeName} />
                     </div>
 
                     <div className="user-pred__scores">
@@ -104,7 +109,7 @@ export default function UserPredictions() {
                         <span className="user-pred__score">{pred.homeScore} – {pred.awayScore}</span>
                       </div>
                       {hasResult && (
-                        <div className="user-pred__score-block">
+                        <div className="user-pred__score-block user-pred__score-block--result">
                           <span className="user-pred__score-label">Resultado</span>
                           <span className="user-pred__score">{m.homeScore} – {m.awayScore}</span>
                         </div>
@@ -115,10 +120,6 @@ export default function UserPredictions() {
                       <FlagImg code={awayFlag} name={awayName} />
                       <span>{awayName}</span>
                     </div>
-                  </div>
-
-                  <div className="user-pred__points">
-                    {pointsBadge(pred.points)}
                   </div>
                 </div>
               );

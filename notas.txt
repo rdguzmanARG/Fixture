@@ -1,0 +1,3 @@
+ Correr este comando para actualizar los horarios
+ 
+ yarn workspace fixture-server db:update-times
