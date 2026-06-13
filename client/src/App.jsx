@@ -8,6 +8,7 @@ import GroupStage from './pages/GroupStage.jsx';
 import Knockout from './pages/Knockout.jsx';
 import Leaderboard from './pages/Leaderboard.jsx';
 import UserPredictions from './pages/UserPredictions.jsx';
+import MatchPredictions from './pages/MatchPredictions.jsx';
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth();
@@ -34,6 +35,7 @@ function AppLayout() {
         <Route path="/knockout" element={<ProtectedRoute><Knockout /></ProtectedRoute>} />
         <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
         <Route path="/players/:userId" element={<ProtectedRoute><UserPredictions /></ProtectedRoute>} />
+        <Route path="/matches/:matchId/predictions" element={<ProtectedRoute><MatchPredictions /></ProtectedRoute>} />
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
         <Route path="*" element={<Navigate to="/all" replace />} />

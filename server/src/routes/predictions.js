@@ -107,6 +107,24 @@ router.get("/user/:userId", authenticate, async (req, res) => {
   res.json({ user, predictions });
 });
 
+router.get("/match/:matchId", authenticate, async (req, res) => {
+  const matchId = parseInt(req.params.matchId);
+
+  const match = await prisma.match.findUnique({
+    where: { id: matchId },
+    include: { homeTeam: true, awayTeam: true },
+  });
+  if (!match) return res.status(404).json({ error: "Match not found" });
+
+  const predictions = await prisma.prediction.findMany({
+    where: { matchId },
+    include: { user: { select: { id: true, username: true } } },
+    orderBy: [{ points: "desc" }, { user: { username: "asc" } }],
+  });
+
+  res.json({ match, predictions });
+});
+
 router.get("/leaderboard", authenticate, async (req, res) => {
   const users = await prisma.user.findMany({
     where: { isAdmin: false },

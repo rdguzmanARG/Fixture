@@ -285,6 +285,16 @@ input {
     color: rgba(255, 255, 255, 0.75);
     font-size: 0.95rem;
   }
+
+  &--sticky {
+    position: sticky;
+    top: 3rem;
+    z-index: 99;
+    background: $green-dark;
+    padding: 0.75rem 0 1rem;
+    margin-bottom: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
 }
 
 // ── Group tabs ────────────────────────────────────────────────────────────────
@@ -678,6 +688,38 @@ input {
     align-items: center;
     gap: 0.5rem;
     flex-wrap: wrap;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+    border-top: 1px solid $grey-100;
+  }
+
+  &__all-preds {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: $grey-50;
+    border: 1px solid $grey-200;
+    color: $grey-400;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0.5rem 1.5rem;
+    border-radius: 99px;
+    transition:
+      background $transition,
+      border-color $transition,
+      color $transition;
+    &:hover {
+      background: $grey-100;
+      border-color: $grey-400;
+      color: $grey-700;
+    }
   }
 }
 
@@ -1228,6 +1270,128 @@ input {
 
     &__score-block--result {
       padding-left: 0.5rem;
+    }
+  }
+}
+
+// ── Match predictions page ────────────────────────────────────────────────────
+.match-preds {
+  &__header-match {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0.6rem 0 0.4rem;
+  }
+
+  &__header-team {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: $white;
+    &--away {
+      flex-direction: row-reverse;
+      text-align: right;
+    }
+  }
+
+  &__header-score {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: $white;
+    min-width: 4rem;
+    text-align: center;
+  }
+
+  &__header-sep {
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 400;
+  }
+
+  &__header-vs {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.5rem 0;
+  }
+
+  &__item {
+    background: $white;
+    border-radius: $radius;
+    box-shadow: $shadow;
+    border-left: 4px solid $grey-200;
+    padding: 0.65rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    &--exact   { border-left-color: $gold; }
+    &--correct { border-left-color: $green; }
+    &--wrong   { border-left-color: $red; }
+    &--pending { border-left-color: $grey-200; }
+  }
+
+  &__user {
+    background: none;
+    border: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: $grey-700;
+    cursor: pointer;
+    padding: 0;
+    flex: 1;
+    text-align: left;
+    &:hover {
+      color: $green-dark;
+      text-decoration: underline;
+    }
+  }
+
+  &__score {
+    font-size: 1rem;
+    font-weight: 700;
+    color: $grey-700;
+    min-width: 3.5rem;
+    text-align: center;
+  }
+
+  &__badge {
+    font-size: 0.8rem;
+    font-weight: 700;
+    border-radius: 6px;
+    padding: 0.25rem 0.55rem;
+    min-width: 2.5rem;
+    text-align: center;
+
+    &--exact {
+      background: $gold-light;
+      color: color.adjust(#e8b84b, $lightness: -20%);
+    }
+    &--correct {
+      background: $grey-100;
+      color: $green-dark;
+    }
+    &--wrong {
+      background: #ffe3e3;
+      color: $red;
+    }
+    &--pending {
+      background: $grey-50;
+      color: $grey-400;
     }
   }
 }
