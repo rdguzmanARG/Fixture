@@ -77,6 +77,14 @@ export default function MatchPredictions() {
               <span>{awayName}</span>
             </div>
           </div>
+          {match.matchStatus === 'PLAYING' && (
+            <div className="match-preds__live-row">
+              <span className="live-badge">
+                <span className="live-badge__dot" />
+                EN VIVO
+              </span>
+            </div>
+          )}
           <p>{predictions.length} pronósticos</p>
         </div>
       </div>

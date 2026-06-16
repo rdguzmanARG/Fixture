@@ -26,7 +26,7 @@ export default function AllMatches() {
   const hasTeams = (m) => m.homeTeam && m.awayTeam;
   const filtered = showAll
     ? matches.filter(hasTeams)
-    : matches.filter((m) => hasTeams(m) && !m.awayScore && !m.homeScore);
+    : matches.filter((m) => hasTeams(m) && !m.matchStatus.endsWith('ED'));
 
   const sorted = [...filtered].sort((a, b) => {
     if (!a.date) return 1;

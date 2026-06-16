@@ -7,27 +7,41 @@ const API_BASE = 'https://api.football-data.org/v4';
 const COMPETITION = 'WC';
 
 async function applyResult(dbMatch, homeScore, awayScore) {
-  if (dbMatch.homeScore === homeScore && dbMatch.awayScore === awayScore) return false;
+  const scoresUnchanged = dbMatch.homeScore === homeScore && dbMatch.awayScore === awayScore;
+  if (scoresUnchanged && dbMatch.matchStatus === 'FINALIZED') return false;
 
   const updated = await prisma.match.update({
     where: { id: dbMatch.id },
-    data: { homeScore, awayScore },
+    data: { homeScore, awayScore, matchStatus: 'FINALIZED' },
     include: { predictions: true },
   });
 
-  await Promise.all(
-    updated.predictions.map((p) =>
-      prisma.prediction.update({
-        where: { id: p.id },
-        data: { points: calculatePoints(p, updated) },
-      })
-    )
-  );
+  if (!scoresUnchanged) {
+    await Promise.all(
+      updated.predictions.map((p) =>
+        prisma.prediction.update({
+          where: { id: p.id },
+          data: { points: calculatePoints(p, updated) },
+        })
+      )
+    );
+  }
 
   return true;
 }
 
 export async function syncMatchResults() {
+  const hasActive = await prisma.match.count({
+    where: { matchStatus: { in: ['STARTING', 'PLAYING'] } },
+  });
+  if (hasActive === 0) return;
+
+  // Transition STARTING → PLAYING once match time has passed (no API needed)
+  await prisma.match.updateMany({
+    where: { matchStatus: 'STARTING', date: { lte: new Date() } },
+    data: { matchStatus: 'PLAYING' },
+  });
+
   const apiKey = process.env.FOOTBALL_DATA_API_KEY;
   if (!apiKey) {
     console.warn('[sync] FOOTBALL_DATA_API_KEY not set — skipping');
@@ -79,7 +93,7 @@ export async function lockStartedMatches() {
 
   const { count } = await prisma.match.updateMany({
     where: { date: { lte: cutoff }, isLocked: false },
-    data: { isLocked: true },
+    data: { isLocked: true, matchStatus: 'STARTING' },
   });
 
   if (count > 0) console.log(`[lock] Locked ${count} match(es)`);

@@ -163,6 +163,14 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
   return (
     <div className={`match-card${status ? ` match-card--${status}` : ''}`}>
       <div className="match-card__meta">
+        {match.matchStatus === 'PLAYING' && (
+          <div>
+            <span className="live-badge">
+              <span className="live-badge__dot" />
+              EN VIVO
+            </span>
+          </div>
+        )}
         <span>#{match.matchNumber}</span>
         {match.date && <span>{formatDate(match.date)}</span>}
         {match.city && <span>{match.city}</span>}

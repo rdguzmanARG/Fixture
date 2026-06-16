@@ -1274,6 +1274,36 @@ input {
   }
 }
 
+// ── Live badge ────────────────────────────────────────────────────────────────
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: $white;
+  background: $red;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  vertical-align: middle;
+
+  &__dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: $white;
+    flex-shrink: 0;
+    animation: live-dot-pulse 1.2s ease-in-out infinite;
+  }
+}
+
+@keyframes live-dot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.35; transform: scale(0.6); }
+}
+
 // ── Match predictions page ────────────────────────────────────────────────────
 .match-preds {
   &__header-match {
@@ -1320,6 +1350,11 @@ input {
     color: rgba(255, 255, 255, 0.5);
     text-transform: uppercase;
     letter-spacing: 0.08em;
+  }
+
+  &__live-row {
+    text-align: center;
+    margin: 0.3rem 0 0.1rem;
   }
 
   &__list {

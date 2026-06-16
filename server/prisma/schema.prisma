@@ -6,6 +6,13 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum MatchStatus {
+  PENDING
+  STARTING
+  PLAYING
+  FINALIZED
+}
+
 model User {
   id          Int          @id @default(autoincrement())
   username    String       @unique
@@ -45,6 +52,7 @@ model Match {
   isLocked      Boolean      @default(false)
   externalId    String?      @unique
   scoreReversed Boolean      @default(false)
+  matchStatus   MatchStatus  @default(PENDING)
   predictions   Prediction[]
 }
 

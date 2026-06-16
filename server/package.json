@@ -14,6 +14,7 @@
     "db:seed": "node --env-file=.env prisma/seed.js",
     "db:init-sync": "node --env-file=.env src/scripts/initExternalIds.js",
     "db:update-times": "node --env-file=.env src/scripts/updateMatchTimes.js",
+    "db:backfill-status": "node --env-file=.env src/scripts/backfillMatchStatus.js",
     "db:studio": "prisma studio"
   },
   "dependencies": {
