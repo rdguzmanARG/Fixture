@@ -20,7 +20,7 @@ function ProtectedRoute({ children }) {
 function PublicRoute({ children }) {
   const { user } = useAuth();
   if (user === undefined) return <div className="loading">Loading…</div>;
-  if (user) return <Navigate to="/all" replace />;
+  if (user) return <Navigate to="/leaderboard" replace />;
   return children;
 }
 
@@ -29,7 +29,7 @@ function AppLayout() {
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Navigate to="/all" replace />} />
+        <Route path="/" element={<Navigate to="/leaderboard" replace />} />
         <Route path="/all" element={<ProtectedRoute><AllMatches /></ProtectedRoute>} />
         <Route path="/groups" element={<ProtectedRoute><GroupStage /></ProtectedRoute>} />
         <Route path="/knockout" element={<ProtectedRoute><Knockout /></ProtectedRoute>} />
@@ -38,7 +38,7 @@ function AppLayout() {
         <Route path="/matches/:matchId/predictions" element={<ProtectedRoute><MatchPredictions /></ProtectedRoute>} />
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-        <Route path="*" element={<Navigate to="/all" replace />} />
+        <Route path="*" element={<Navigate to="/leaderboard" replace />} />
       </Routes>
     </>
   );
