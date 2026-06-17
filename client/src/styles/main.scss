@@ -321,6 +321,10 @@ input {
       background: $green;
       border-color: $green;
       color: $white;
+      &:hover {
+        border-color: $green;
+        color: $white;
+      }
     }
   }
 }
