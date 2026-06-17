@@ -1,0 +1,17 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: fixture-mysql
+    command: --lower-case-table-names=1
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: fixture
+      MYSQL_USER: fixture
+      MYSQL_PASSWORD: fixture123
+    ports:
+      - "3307:3306"
+    volumes:
+      - fixture-mysql-data:/var/lib/mysql
+
+volumes:
+  fixture-mysql-data:

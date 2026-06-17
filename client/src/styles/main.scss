@@ -301,7 +301,7 @@ input {
 .group-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 5px;
   margin-bottom: 1.5rem;
 
   &__tab {
@@ -1136,10 +1136,18 @@ input {
     flex-direction: column;
     gap: 0.6rem;
 
-    &--exact   { border-left-color: $gold; }
-    &--correct { border-left-color: $green; }
-    &--wrong   { border-left-color: $red; }
-    &--pending { border-left-color: $grey-200; }
+    &--exact {
+      border-left-color: $gold;
+    }
+    &--correct {
+      border-left-color: $green;
+    }
+    &--wrong {
+      border-left-color: $red;
+    }
+    &--pending {
+      border-left-color: $grey-200;
+    }
   }
 
   &__meta {
@@ -1300,8 +1308,15 @@ input {
 }
 
 @keyframes live-dot-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.35; transform: scale(0.6); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.6);
+  }
 }
 
 // ── Match predictions page ────────────────────────────────────────────────────
@@ -1374,10 +1389,18 @@ input {
     align-items: center;
     gap: 1rem;
 
-    &--exact   { border-left-color: $gold; }
-    &--correct { border-left-color: $green; }
-    &--wrong   { border-left-color: $red; }
-    &--pending { border-left-color: $grey-200; }
+    &--exact {
+      border-left-color: $gold;
+    }
+    &--correct {
+      border-left-color: $green;
+    }
+    &--wrong {
+      border-left-color: $red;
+    }
+    &--pending {
+      border-left-color: $grey-200;
+    }
   }
 
   &__user {

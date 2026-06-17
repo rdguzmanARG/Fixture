@@ -148,11 +148,13 @@ const knockoutMatches = [
 async function main() {
   console.log('Seeding database...');
 
-  // Clean existing data
+  // Clean existing data (disable FK checks so TRUNCATE works on MySQL)
+  await prisma.$executeRaw`SET FOREIGN_KEY_CHECKS = 0`;
   await prisma.prediction.deleteMany();
   await prisma.match.deleteMany();
   await prisma.team.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.$executeRaw`SET FOREIGN_KEY_CHECKS = 1`;
 
   // Create admin user
   const hashedPassword = await bcrypt.hash('Admin1234', 10);

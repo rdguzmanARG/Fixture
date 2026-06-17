@@ -1,0 +1,5 @@
+Load docker
+docker-compose -p fixture -f D:\01-Codigo\Aticus\Fixture\server\docker-compose.yml up -d
+
+List docker
+docker ps 

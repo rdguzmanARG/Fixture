@@ -20,6 +20,8 @@ model User {
   isAdmin     Boolean      @default(false)
   predictions Prediction[]
   createdAt   DateTime     @default(now())
+
+  @@map("user")
 }
 
 model Team {
@@ -30,6 +32,8 @@ model Team {
   group       String
   homeMatches Match[] @relation("HomeTeam")
   awayMatches Match[] @relation("AwayTeam")
+
+  @@map("team")
 }
 
 model Match {
@@ -54,6 +58,8 @@ model Match {
   scoreReversed Boolean      @default(false)
   matchStatus   MatchStatus  @default(PENDING)
   predictions   Prediction[]
+
+  @@map("match")
 }
 
 model Prediction {
@@ -69,4 +75,5 @@ model Prediction {
   updatedAt DateTime @updatedAt
 
   @@unique([userId, matchId])
+  @@map("prediction")
 }
