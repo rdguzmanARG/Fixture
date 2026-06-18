@@ -98,6 +98,14 @@ export default function UserPredictions() {
                       {pointsBadge(pred.points)}
                     </div>
                   </div>
+                  {m.matchStatus === 'PLAYING' && (
+                    <div style={{ textAlign: 'center' }}>
+                      <span className="live-badge">
+                        <span className="live-badge__dot" />
+                        EN VIVO
+                      </span>
+                    </div>
+                  )}
 
                   <div className="user-pred__match">
                     <div className="user-pred__team user-pred__team--home">
