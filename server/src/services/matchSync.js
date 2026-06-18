@@ -7,6 +7,17 @@ import { emit } from "../lib/eventBus.js";
 const API_BASE = "https://api.football-data.org/v4";
 const COMPETITION = "WC";
 
+let lastSyncAt = 0;
+const SYNC_COOLDOWN_MS = 20_000;
+
+export async function syncIfNeeded() {
+  const now = Date.now();
+  if (now - lastSyncAt < SYNC_COOLDOWN_MS) return;
+  lastSyncAt = now;
+  await lockStartedMatches();
+  await syncMatchResults();
+}
+
 async function applyResult(dbMatch, homeScore, awayScore) {
   const updated = await prisma.match.update({
     where: { id: dbMatch.id },

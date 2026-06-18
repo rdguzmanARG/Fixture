@@ -4,10 +4,12 @@ import { authenticate, requireAdmin } from "../middleware/auth.js";
 import { calculatePoints } from "../services/scoring.js";
 import { advanceFromResult } from "../services/knockoutService.js";
 import { emit } from "../lib/eventBus.js";
+import { syncIfNeeded } from "../services/matchSync.js";
 
 const router = Router();
 
 router.get("/", authenticate, async (req, res) => {
+  await syncIfNeeded();
   const { userId } = req.user;
 
   const matches = await prisma.match.findMany({
