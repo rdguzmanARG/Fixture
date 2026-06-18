@@ -2,6 +2,7 @@ import axios from "axios";
 import prisma from "../lib/prisma.js";
 import { calculatePoints } from "./scoring.js";
 import { advanceFromResult } from "./knockoutService.js";
+import { emit } from "../lib/eventBus.js";
 
 const API_BASE = "https://api.football-data.org/v4";
 const COMPETITION = "WC";
@@ -102,7 +103,10 @@ export async function syncMatchResults() {
     }
   }
 
-  if (updated > 0) console.log(`[sync] Updated ${updated} match result(s)`);
+  if (updated > 0) {
+    console.log(`[sync] Updated ${updated} match result(s)`);
+    emit("update");
+  }
 }
 
 export async function lockStartedMatches() {
@@ -112,5 +116,8 @@ export async function lockStartedMatches() {
     data: { isLocked: true, matchStatus: "STARTING" },
   });
 
-  if (count > 0) console.log(`[lock] Locked ${count} match(es)`);
+  if (count > 0) {
+    console.log(`[lock] Locked ${count} match(es)`);
+    emit("update");
+  }
 }

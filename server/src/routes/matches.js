@@ -3,6 +3,7 @@ import prisma from "../lib/prisma.js";
 import { authenticate, requireAdmin } from "../middleware/auth.js";
 import { calculatePoints } from "../services/scoring.js";
 import { advanceFromResult } from "../services/knockoutService.js";
+import { emit } from "../lib/eventBus.js";
 
 const router = Router();
 
@@ -43,6 +44,7 @@ router.put("/:id/lock", authenticate, requireAdmin, async (req, res) => {
   });
 
   res.json({ ok: true, matchId: match.id, isLocked: match.isLocked });
+  emit("update");
 });
 
 router.put("/:id/result", authenticate, requireAdmin, async (req, res) => {
@@ -72,6 +74,7 @@ router.put("/:id/result", authenticate, requireAdmin, async (req, res) => {
   await advanceFromResult(match);
 
   res.json({ ok: true, matchNumber: match.matchNumber });
+  emit("update");
 });
 
 router.delete("/:id/result", authenticate, requireAdmin, async (req, res) => {
@@ -88,6 +91,7 @@ router.delete("/:id/result", authenticate, requireAdmin, async (req, res) => {
   });
 
   res.json({ ok: true, matchId });
+  emit("update");
 });
 
 export default router;

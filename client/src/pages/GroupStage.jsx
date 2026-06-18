@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import GroupTable from '../components/GroupTable.jsx';
 import MatchCard from '../components/MatchCard.jsx';
+import { useRefreshKey } from '../contexts/DataRefreshContext.jsx';
 
 const GROUP_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
@@ -25,6 +26,7 @@ function GroupSection({ activeGroup, teams, groupMatches }) {
 }
 
 export default function GroupStage() {
+  const refreshKey = useRefreshKey();
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeGroup, setActiveGroup] = useState('A');
@@ -33,7 +35,7 @@ export default function GroupStage() {
     const r = await fetch('/api/matches', { credentials: 'include' });
     if (r.ok) setMatches(await r.json());
     setLoading(false);
-  }, []);
+  }, [refreshKey]);
 
   useEffect(() => { load(); }, [load]);
 

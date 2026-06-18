@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import MatchCard from '../components/MatchCard.jsx';
+import { useRefreshKey } from '../contexts/DataRefreshContext.jsx';
 
 const ROUNDS = [
   { key: 'R32',   label: 'Ronda de 32' },
@@ -11,6 +12,7 @@ const ROUNDS = [
 ];
 
 export default function Knockout() {
+  const refreshKey = useRefreshKey();
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -21,7 +23,7 @@ export default function Knockout() {
       setMatches(all.filter((m) => m.round !== 'Group'));
     }
     setLoading(false);
-  }, []);
+  }, [refreshKey]);
 
   useEffect(() => { load(); }, [load]);
 

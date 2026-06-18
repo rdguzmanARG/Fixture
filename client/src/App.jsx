@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext.jsx';
+import { DataRefreshProvider } from './contexts/DataRefreshContext.jsx';
 import Navbar from './components/Navbar.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
@@ -47,9 +48,11 @@ function AppLayout() {
 export default function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <AppLayout />
-      </BrowserRouter>
+      <DataRefreshProvider>
+        <BrowserRouter>
+          <AppLayout />
+        </BrowserRouter>
+      </DataRefreshProvider>
     </AuthProvider>
   );
 }

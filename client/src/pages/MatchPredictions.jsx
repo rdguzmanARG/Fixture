@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useRefreshKey } from '../contexts/DataRefreshContext.jsx';
 
 function FlagImg({ code, name }) {
   if (!code) return <span>🏳</span>;
@@ -32,6 +33,7 @@ function liveItemClass(pred, match) {
 }
 
 export default function MatchPredictions() {
+  const refreshKey = useRefreshKey();
   const { matchId } = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState(null);
@@ -46,7 +48,7 @@ export default function MatchPredictions() {
       })
       .then((d) => { setData(d); setLoading(false); })
       .catch((e) => { setError(e.message); setLoading(false); });
-  }, [matchId]);
+  }, [matchId, refreshKey]);
 
   if (loading) return <div className="loading">Cargando pronósticos…</div>;
   if (error) return <div className="loading">{error}</div>;

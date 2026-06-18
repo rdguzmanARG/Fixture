@@ -7,6 +7,7 @@ import { join } from "path";
 import authRouter from "./routes/auth.js";
 import matchesRouter from "./routes/matches.js";
 import predictionsRouter from "./routes/predictions.js";
+import eventsRouter from "./routes/events.js";
 import "./jobs/syncResults.js";
 import "./jobs/lockMatches.js";
 
@@ -27,6 +28,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRouter);
 app.use("/api/matches", matchesRouter);
 app.use("/api/predictions", predictionsRouter);
+app.use("/api/events", eventsRouter);
 
 app.use(express.static(clientDist));
 app.get("*", (_req, res) => res.sendFile(join(clientDist, "index.html")));

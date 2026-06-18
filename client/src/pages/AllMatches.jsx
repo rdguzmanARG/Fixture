@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import MatchCard from '../components/MatchCard.jsx';
+import { useRefreshKey } from '../contexts/DataRefreshContext.jsx';
 
 function formatDateGroup(dateStr) {
   if (!dateStr) return 'Sin fecha';
@@ -9,6 +10,7 @@ function formatDateGroup(dateStr) {
 }
 
 export default function AllMatches() {
+  const refreshKey = useRefreshKey();
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
@@ -17,7 +19,7 @@ export default function AllMatches() {
     const r = await fetch('/api/matches', { credentials: 'include' });
     if (r.ok) setMatches(await r.json());
     setLoading(false);
-  }, []);
+  }, [refreshKey]);
 
   useEffect(() => { load(); }, [load]);
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
 
@@ -52,6 +52,8 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
   const [removingResult, setRemovingResult] = useState(false);
   const [locked, setLocked] = useState(match.isLocked ?? false);
   const [togglingLock, setTogglingLock] = useState(false);
+
+  useEffect(() => { setLocked(match.isLocked ?? false); }, [match.isLocked]);
 
   const hasPred = !!pred || localSaved;
   const status = cardStatus(match, pred);

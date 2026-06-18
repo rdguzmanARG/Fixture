@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
+import { useRefreshKey } from '../contexts/DataRefreshContext.jsx';
 
 export default function Leaderboard() {
+  const refreshKey = useRefreshKey();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [board, setBoard] = useState([]);
@@ -12,7 +14,7 @@ export default function Leaderboard() {
     fetch('/api/predictions/leaderboard', { credentials: 'include' })
       .then((r) => r.json())
       .then((data) => { setBoard(data); setLoading(false); });
-  }, []);
+  }, [refreshKey]);
 
   if (loading) return <div className="loading">Cargando clasificación…</div>;
 

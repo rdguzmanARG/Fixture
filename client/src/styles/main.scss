@@ -478,7 +478,7 @@ input {
   }
   &--correct {
     border-color: $yellow;
-    background: #fff9db;
+    background: #fffdcc;
   }
   &--wrong {
     border-color: $grey-200;
@@ -1141,10 +1141,10 @@ input {
     gap: 0.6rem;
 
     &--exact {
-      border-left-color: $gold;
+      border-left-color: #4ddf60;
     }
     &--correct {
-      border-left-color: $green;
+      border-left-color: #efe846;
     }
     &--wrong {
       border-left-color: $red;
@@ -1394,13 +1394,16 @@ input {
     gap: 1rem;
 
     &--exact {
-      border-left-color: $gold;
+      border-left-color: #4ddf60;
+      background: #d3f9d8;
     }
     &--correct {
-      border-left-color: $green;
+      border-left-color: #efe846;
+      background: #fffdcc;
     }
     &--wrong {
       border-left-color: $red;
+      background: #ffe3e3;
     }
     &--pending {
       border-left-color: $grey-200;
@@ -1410,8 +1413,8 @@ input {
       background: #d3f9d8;
     }
     &--live-correct {
-      border-left-color: #e8590c;
-      background: #ffe8cc;
+      border-left-color: #efe846;
+      background: #fffdcc;
     }
   }
 
