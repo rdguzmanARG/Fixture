@@ -227,7 +227,7 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
             max="99"
             value={home}
             onChange={(e) => { setHome(e.target.value); setDirty(true); }}
-            placeholder="0"
+            placeholder="-"
             disabled={locked}
             readOnly={!locked && hasPred && !dirty}
           />
@@ -239,7 +239,7 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
             max="99"
             value={away}
             onChange={(e) => { setAway(e.target.value); setDirty(true); }}
-            placeholder="0"
+            placeholder="-"
             disabled={locked}
             readOnly={!locked && hasPred && !dirty}
           />
