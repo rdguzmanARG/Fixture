@@ -13,7 +13,7 @@ export default function AllMatches() {
   const refreshKey = useRefreshKey();
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showAll, setShowAll] = useState(false);
+  const [showOnlyFinalized, setShowOnlyFinalized] = useState(false);
 
   const load = useCallback(async () => {
     const r = await fetch('/api/matches', { credentials: 'include' });
@@ -26,8 +26,8 @@ export default function AllMatches() {
   if (loading) return <div className="loading">Cargando fixture…</div>;
 
   const hasTeams = (m) => m.homeTeam && m.awayTeam;
-  const filtered = showAll
-    ? matches.filter(hasTeams)
+  const filtered = showOnlyFinalized
+    ? matches.filter((m) => hasTeams(m) && m.matchStatus.endsWith('ED'))
     : matches.filter((m) => hasTeams(m) && !m.matchStatus.endsWith('ED'));
 
   const sorted = [...filtered].sort((a, b) => {
@@ -65,10 +65,10 @@ export default function AllMatches() {
           <label className="all-matches__toggle">
             <input
               type="checkbox"
-              checked={showAll}
-              onChange={(e) => setShowAll(e.target.checked)}
+              checked={showOnlyFinalized}
+              onChange={(e) => setShowOnlyFinalized(e.target.checked)}
             />
-            Incluir partidos finalizados
+            Solo partidos finalizados
           </label>
         </div>
 
