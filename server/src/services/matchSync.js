@@ -7,7 +7,7 @@ import { emit } from "../lib/eventBus.js";
 const API_BASE = "https://sports.bzzoiro.com/api/v2";
 
 let lastSyncAt = 0;
-const SYNC_COOLDOWN_MS = 20_000;
+const SYNC_COOLDOWN_MS = 10_000;
 
 export async function syncIfNeeded() {
   const now = Date.now();
@@ -106,14 +106,16 @@ export async function syncMatchResults() {
           await advanceFromResult({ ...dbMatch, homeScore: h, awayScore: a });
         }
       } else if (status === "inprogress" || status === "penalties") {
+        const currentMinute = event.current_minute ?? null;
         const noChange =
           dbMatch.homeScore === h &&
           dbMatch.awayScore === a &&
-          dbMatch.matchStatus === "PLAYING";
+          dbMatch.matchStatus === "PLAYING" &&
+          dbMatch.currentMinute === currentMinute;
         if (!noChange) {
           await prisma.match.update({
             where: { id: dbMatch.id },
-            data: { homeScore: h, awayScore: a, matchStatus: "PLAYING" },
+            data: { homeScore: h, awayScore: a, matchStatus: "PLAYING", currentMinute },
           });
           updated++;
         }

@@ -2,7 +2,7 @@ import cron from "node-cron";
 import { syncMatchResults } from "../services/matchSync.js";
 const isDev = process.env.NODE_ENV === "development";
 
-cron.schedule("*/30 * * * * *", async () => {
+cron.schedule("*/15 * * * * *", async () => {
   try {
     if (!isDev) await syncMatchResults();
   } catch (err) {
@@ -10,4 +10,4 @@ cron.schedule("*/30 * * * * *", async () => {
   }
 });
 
-console.log("[sync] Match result sync scheduled (every 30 seconds)");
+console.log("[sync] Match result sync scheduled (every 15 seconds)");

@@ -172,6 +172,9 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
               <span className="live-badge__dot" />
               EN VIVO
             </span>
+            {match.currentMinute != null && (
+              <div className="live-minute">{match.currentMinute}'</div>
+            )}
           </div>
         )}
         <span>#{match.matchNumber}</span>

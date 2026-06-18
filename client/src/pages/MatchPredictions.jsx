@@ -99,6 +99,9 @@ export default function MatchPredictions() {
                 <span className="live-badge__dot" />
                 EN VIVO
               </span>
+              {match.currentMinute != null && (
+                <div className="live-minute">{match.currentMinute}'</div>
+              )}
             </div>
           )}
           <p>{predictions.length} pronósticos</p>

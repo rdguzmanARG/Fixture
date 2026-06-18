@@ -104,6 +104,9 @@ export default function UserPredictions() {
                         <span className="live-badge__dot" />
                         EN VIVO
                       </span>
+                      {m.currentMinute != null && (
+                        <div className="live-minute">{m.currentMinute}'</div>
+                      )}
                     </div>
                   )}
 

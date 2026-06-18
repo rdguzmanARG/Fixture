@@ -57,6 +57,7 @@ model Match {
   externalId    String?      @unique
   scoreReversed Boolean      @default(false)
   matchStatus   MatchStatus  @default(PENDING)
+  currentMinute Int?
   predictions   Prediction[]
 
   @@map("match")

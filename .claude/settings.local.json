@@ -35,7 +35,8 @@
       "PowerShell(New-Item *)",
       "Bash(docker exec fixture-mysql *)",
       "Bash(findstr MYSQL)",
-      "PowerShell(docker exec fixture-mysql *)"
+      "PowerShell(docker exec fixture-mysql *)",
+      "PowerShell(mysql *)"
     ]
   }
 }

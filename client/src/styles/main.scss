@@ -1253,7 +1253,6 @@ input {
       color: $green-dark;
     }
     &--wrong {
-      background: #ffe3e3;
       color: $red;
     }
     &--pending {
@@ -1301,6 +1300,13 @@ input {
     flex-shrink: 0;
     animation: live-dot-pulse 1.2s ease-in-out infinite;
   }
+}
+
+.live-minute {
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 0.15rem;
 }
 
 @keyframes live-dot-pulse {
@@ -1395,7 +1401,6 @@ input {
     }
     &--wrong {
       border-left-color: $red;
-      background: #ffe3e3;
     }
     &--pending {
       border-left-color: $grey-200;

@@ -4,12 +4,12 @@ import { authenticate, requireAdmin } from "../middleware/auth.js";
 import { calculatePoints } from "../services/scoring.js";
 import { advanceFromResult } from "../services/knockoutService.js";
 import { emit } from "../lib/eventBus.js";
-import { syncIfNeeded } from "../services/matchSync.js";
+// import { syncIfNeeded } from "../services/matchSync.js";
 
 const router = Router();
 
 router.get("/", authenticate, async (req, res) => {
-  await syncIfNeeded();
+  // await syncIfNeeded();
   const { userId } = req.user;
 
   const matches = await prisma.match.findMany({
@@ -69,7 +69,7 @@ router.put("/:id/result", authenticate, requireAdmin, async (req, res) => {
       prisma.prediction.update({
         where: { id: p.id },
         data: { points: calculatePoints(p, match) },
-      })
+      }),
     ),
   );
 
