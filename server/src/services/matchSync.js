@@ -4,8 +4,7 @@ import { calculatePoints } from "./scoring.js";
 import { advanceFromResult } from "./knockoutService.js";
 import { emit } from "../lib/eventBus.js";
 
-const API_BASE = "https://api.football-data.org/v4";
-const COMPETITION = "WC";
+const API_BASE = "https://sports.bzzoiro.com/api/v2";
 
 let lastSyncAt = 0;
 const SYNC_COOLDOWN_MS = 20_000;
@@ -39,27 +38,37 @@ async function applyResult(dbMatch, homeScore, awayScore) {
   return true;
 }
 
+async function fetchEventById(apiKey, eventId) {
+  try {
+    const { data } = await axios.get(`${API_BASE}/events/${eventId}/`, {
+      headers: { Authorization: `Token ${apiKey}` },
+    });
+    return data;
+  } catch {
+    return null;
+  }
+}
+
 export async function syncMatchResults() {
   const hasActive = await prisma.match.count({
     where: { matchStatus: { in: ["STARTING", "PLAYING"] } },
   });
   if (hasActive === 0) return;
 
-  const apiKey = process.env.FOOTBALL_DATA_API_KEY;
+  const apiKey = process.env.BSD_API_KEY;
   if (!apiKey) {
-    console.warn("[sync] FOOTBALL_DATA_API_KEY not set — skipping");
+    console.warn("[sync] BSD_API_KEY not set — skipping");
     return;
   }
 
-  const { data } = await axios.get(
-    `${API_BASE}/competitions/${COMPETITION}/matches`,
-    {
-      headers: { "X-Auth-Token": apiKey },
-      params: { status: "IN_PLAY,PAUSED,FINISHED" },
-    },
-  );
+  const { data: liveData } = await axios.get(`${API_BASE}/events/live/`, {
+    headers: { Authorization: `Token ${apiKey}` },
+  });
 
-  const apiMatches = data.matches ?? [];
+  const liveEvents = liveData.events ?? [];
+  const liveByEventId = Object.fromEntries(
+    liveEvents.map((e) => [String(e.id), e]),
+  );
 
   const dbMatches = await prisma.match.findMany({
     where: {
@@ -69,30 +78,34 @@ export async function syncMatchResults() {
     include: { predictions: true },
   });
 
-  const dbByExternalId = Object.fromEntries(
-    dbMatches.map((m) => [m.externalId, m]),
-  );
-
   let updated = 0;
-  for (const am of apiMatches) {
-    const dbMatch = dbByExternalId[String(am.id)];
-    if (!dbMatch) continue;
+  for (const dbMatch of dbMatches) {
+    let event = liveByEventId[dbMatch.externalId];
 
-    let h = am.score?.fullTime?.home ?? 0;
-    let a = am.score?.fullTime?.away ?? 0;
+    // PLAYING match absent from live list → likely just finished; confirm via individual fetch
+    if (
+      !event &&
+      (dbMatch.matchStatus === "PLAYING" || dbMatch.matchStatus === "STARTING")
+    ) {
+      event = await fetchEventById(apiKey, dbMatch.externalId);
+    }
 
-    // API teams are reversed relative to our DB — swap scores to match our home/away
+    if (!event) continue;
+
+    const status = event.status;
+    let h = event.home_score ?? 0;
+    let a = event.away_score ?? 0;
+
     if (dbMatch.scoreReversed) [h, a] = [a, h];
 
     try {
-      if (am.status === "FINISHED") {
+      if (status === "finished") {
         const changed = await applyResult(dbMatch, h, a);
         if (changed) {
           updated++;
           await advanceFromResult({ ...dbMatch, homeScore: h, awayScore: a });
         }
-      } else {
-        // IN_PLAY or PAUSED: update live score without finalizing or assigning points
+      } else if (status === "inprogress" || status === "penalties") {
         const noChange =
           dbMatch.homeScore === h &&
           dbMatch.awayScore === a &&
