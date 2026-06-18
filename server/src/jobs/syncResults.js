@@ -1,10 +1,10 @@
 import cron from "node-cron";
 import { syncMatchResults } from "../services/matchSync.js";
-const isProd = process.env.NODE_ENV === "production";
+const isDev = process.env.NODE_ENV === "development";
 
 cron.schedule("*/30 * * * * *", async () => {
   try {
-    if (isProd) await syncMatchResults();
+    if (!isDev) await syncMatchResults();
   } catch (err) {
     console.error("[sync] Cron error:", err.message);
   }
