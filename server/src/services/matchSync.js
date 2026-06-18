@@ -19,20 +19,22 @@ export async function syncIfNeeded() {
 }
 
 async function applyResult(dbMatch, homeScore, awayScore) {
-  const updated = await prisma.match.update({
-    where: { id: dbMatch.id },
-    data: { homeScore, awayScore, matchStatus: "FINALIZED" },
-    include: { predictions: true },
-  });
+  await prisma.$transaction(async (tx) => {
+    const updated = await tx.match.update({
+      where: { id: dbMatch.id },
+      data: { homeScore, awayScore, matchStatus: "FINALIZED" },
+      include: { predictions: true },
+    });
 
-  await Promise.all(
-    updated.predictions.map((p) =>
-      prisma.prediction.update({
-        where: { id: p.id },
-        data: { points: calculatePoints(p, updated) },
-      }),
-    ),
-  );
+    await Promise.all(
+      updated.predictions.map((p) =>
+        tx.prediction.update({
+          where: { id: p.id },
+          data: { points: calculatePoints(p, updated) },
+        }),
+      ),
+    );
+  });
 
   return true;
 }
