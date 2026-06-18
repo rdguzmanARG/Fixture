@@ -8,26 +8,20 @@ const API_BASE = "https://api.football-data.org/v4";
 const COMPETITION = "WC";
 
 async function applyResult(dbMatch, homeScore, awayScore) {
-  const scoresUnchanged =
-    dbMatch.homeScore === homeScore && dbMatch.awayScore === awayScore;
-  if (scoresUnchanged && dbMatch.matchStatus === "FINALIZED") return false;
-
   const updated = await prisma.match.update({
     where: { id: dbMatch.id },
     data: { homeScore, awayScore, matchStatus: "FINALIZED" },
     include: { predictions: true },
   });
 
-  if (!scoresUnchanged) {
-    await Promise.all(
-      updated.predictions.map((p) =>
-        prisma.prediction.update({
-          where: { id: p.id },
-          data: { points: calculatePoints(p, updated) },
-        }),
-      ),
-    );
-  }
+  await Promise.all(
+    updated.predictions.map((p) =>
+      prisma.prediction.update({
+        where: { id: p.id },
+        data: { points: calculatePoints(p, updated) },
+      }),
+    ),
+  );
 
   return true;
 }
