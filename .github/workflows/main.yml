@@ -42,6 +42,7 @@ jobs:
         run: |
           mkdir -p ./fixture/client/dist
           cp web.config ./fixture/web.config
+          cp iisnode.yml ./fixture/iisnode.yml
           sed -i "s|__DATABASE_URL__|${{ secrets.DATABASE_URL }}|g" ./fixture/web.config
           sed -i "s|__FOOTBALL_DATA_API_KEY__|${{ secrets.FOOTBALL_DATA_API_KEY }}|g" ./fixture/web.config
           sed -i "s|__JWT_SECRET__|${{ secrets.JWT_SECRET }}|g" ./fixture/web.config
