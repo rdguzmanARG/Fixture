@@ -1405,6 +1405,14 @@ input {
     &--pending {
       border-left-color: $grey-200;
     }
+    &--live-exact {
+      border-left-color: #2f9e44;
+      background: #d3f9d8;
+    }
+    &--live-correct {
+      border-left-color: #e8590c;
+      background: #ffe8cc;
+    }
   }
 
   &__user {

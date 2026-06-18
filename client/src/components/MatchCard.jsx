@@ -26,6 +26,7 @@ function formatDate(dateStr) {
 function cardStatus(match, prediction) {
   if (!prediction) return '';
   if (match.homeScore == null) return 'saved';
+  if (match.matchStatus === 'PLAYING') return 'saved';
   if (prediction.points === 5) return 'exact';
   if (prediction.points === 3) return 'correct';
   return 'wrong';
@@ -190,7 +191,7 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
 
       {match.homeScore != null && (
         <div className="match-card__result">
-          Resultado: {match.homeScore} – {match.awayScore}
+          {match.matchStatus === 'PLAYING' ? 'En juego:' : 'Resultado:'} {match.homeScore} – {match.awayScore}
         </div>
       )}
 

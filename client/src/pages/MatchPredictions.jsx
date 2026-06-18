@@ -22,6 +22,15 @@ function pointsBadge(points) {
   return <span className="match-preds__badge match-preds__badge--wrong">0pt</span>;
 }
 
+function liveItemClass(pred, match) {
+  if (match.matchStatus !== 'PLAYING' || match.homeScore == null) return null;
+  if (pred.homeScore === match.homeScore && pred.awayScore === match.awayScore) return 'live-exact';
+  const matchOutcome = Math.sign(match.homeScore - match.awayScore);
+  const predOutcome = Math.sign(pred.homeScore - pred.awayScore);
+  if (matchOutcome === predOutcome) return 'live-correct';
+  return null;
+}
+
 export default function MatchPredictions() {
   const { matchId } = useParams();
   const navigate = useNavigate();
@@ -49,10 +58,15 @@ export default function MatchPredictions() {
   const awayFlag = match.awayTeam?.flag;
   const hasResult = match.homeScore != null && match.awayScore != null;
 
-  const outcomeRank = (p) => (p.homeScore > p.awayScore ? 0 : p.homeScore === p.awayScore ? 1 : 2);
-  const sortedPredictions = hasResult
-    ? predictions
-    : [...predictions].sort((a, b) => outcomeRank(a) - outcomeRank(b));
+  const sortedPredictions = [...predictions].sort((a, b) => {
+    const group = (p) => (p.homeScore > p.awayScore ? 0 : p.homeScore === p.awayScore ? 1 : 2);
+    const ga = group(a), gb = group(b);
+    if (ga !== gb) return ga - gb;
+    if (ga === 0) return b.homeScore - a.homeScore; // home win: more home goals first
+    if (ga === 1) return b.homeScore - a.homeScore; // tie: higher score first
+    if (a.awayScore !== b.awayScore) return a.awayScore - b.awayScore; // away win: fewer away goals first
+    return a.homeScore - b.homeScore;
+  });
 
   return (
     <div>
@@ -97,10 +111,13 @@ export default function MatchPredictions() {
           </div>
         ) : (
           <div className="match-preds__list">
-            {sortedPredictions.map((pred) => (
+            {sortedPredictions.map((pred) => {
+              const live = liveItemClass(pred, match);
+              const itemMod = live ?? (pred.points === 5 ? 'exact' : pred.points === 3 ? 'correct' : pred.points === 0 ? 'wrong' : 'pending');
+              return (
               <div
                 key={pred.id}
-                className={`match-preds__item match-preds__item--${pred.points === 5 ? 'exact' : pred.points === 3 ? 'correct' : pred.points === 0 ? 'wrong' : 'pending'}`}
+                className={`match-preds__item match-preds__item--${itemMod}`}
               >
                 <button
                   className="match-preds__user"
@@ -113,7 +130,8 @@ export default function MatchPredictions() {
                 </div>
                 {pointsBadge(pred.points)}
               </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
