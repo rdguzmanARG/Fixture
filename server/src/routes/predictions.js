@@ -73,7 +73,9 @@ router.delete("/:matchId", authenticate, async (req, res) => {
   const match = await prisma.match.findUnique({ where: { id: matchId } });
   if (!match) return res.status(404).json({ error: "Match not found" });
   if (match.isLocked)
-    return res.status(403).json({ error: "Predictions for this match are closed" });
+    return res
+      .status(403)
+      .json({ error: "Predictions for this match are closed" });
 
   const deleted = await prisma.prediction.deleteMany({
     where: { userId, matchId },
@@ -148,11 +150,18 @@ router.get("/leaderboard", authenticate, async (req, res) => {
       points: total,
       exact,
       correct,
-      predictions: u.predictions.length,
+      predictions: scored.length,
     };
   });
 
-  board.sort((a, b) => b.points - a.points || b.exact - a.exact);
+  board.sort(
+    (a, b) =>
+      b.points - a.points ||
+      b.exact - a.exact ||
+      b.correct - a.correct ||
+      a.predictions - b.predictions ||
+      a.username.localeCompare(b.username),
+  );
   res.json(board);
 });
 
