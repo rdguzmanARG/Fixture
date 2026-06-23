@@ -64,9 +64,9 @@ export default function MatchPredictions() {
     const group = (p) => (p.homeScore > p.awayScore ? 0 : p.homeScore === p.awayScore ? 1 : 2);
     const ga = group(a), gb = group(b);
     if (ga !== gb) return ga - gb;
-    if (ga === 0) return b.homeScore - a.homeScore; // home win: more home goals first
+    if (ga === 0) return b.homeScore - a.homeScore || b.awayScore - a.awayScore; // home win: more home goals first
     if (ga === 1) return b.homeScore - a.homeScore; // tie: higher score first
-    if (a.awayScore !== b.awayScore) return a.awayScore - b.awayScore; // away win: fewer away goals first
+    if (a.awayScore !== b.awayScore) return a.awayScore - b.awayScore || a.homeScore - b.homeScore; // away win: fewer away goals first
     return a.homeScore - b.homeScore;
   });
 
@@ -119,22 +119,23 @@ export default function MatchPredictions() {
             {sortedPredictions.map((pred) => {
               const live = liveItemClass(pred, match);
               const itemMod = live ?? (pred.points === 5 ? 'exact' : pred.points === 3 ? 'correct' : pred.points === 0 ? 'wrong' : 'pending');
+              if (pred.user == null) return null;
               return (
-              <div
-                key={pred.id}
-                className={`match-preds__item match-preds__item--${itemMod}`}
-              >
-                <button
-                  className="match-preds__user"
-                  onClick={() => navigate(`/players/${pred.user.id}`)}
+                <div
+                  key={pred.id}
+                  className={`match-preds__item match-preds__item--${itemMod}`}
                 >
-                  {pred.user.username}
-                </button>
-                <div className="match-preds__score">
-                  {pred.homeScore} – {pred.awayScore}
+                  <button
+                    className="match-preds__user"
+                    onClick={() => navigate(`/players/${pred.user.id}`)}
+                  >
+                    {pred.user?.username ?? pred.id}
+                  </button>
+                  <div className="match-preds__score">
+                    {pred.homeScore} – {pred.awayScore}
+                  </div>
+                  {pointsBadge(pred.points)}
                 </div>
-                {pointsBadge(pred.points)}
-              </div>
               );
             })}
           </div>
