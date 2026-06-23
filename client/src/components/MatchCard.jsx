@@ -48,12 +48,14 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
   // Admin state
   const [adminHome, setAdminHome] = useState(match.homeScore ?? '');
   const [adminAway, setAdminAway] = useState(match.awayScore ?? '');
+  const [adminStatus, setAdminStatus] = useState(match.matchStatus ?? 'PENDING');
   const [settingResult, setSettingResult] = useState(false);
   const [removingResult, setRemovingResult] = useState(false);
   const [locked, setLocked] = useState(match.isLocked ?? false);
   const [togglingLock, setTogglingLock] = useState(false);
 
   useEffect(() => { setLocked(match.isLocked ?? false); }, [match.isLocked]);
+  useEffect(() => { setAdminStatus(match.matchStatus ?? 'PENDING'); }, [match.matchStatus]);
 
   const hasPred = !!pred || localSaved;
   const status = cardStatus(match, pred);
@@ -127,7 +129,7 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ homeScore: Number(adminHome), awayScore: Number(adminAway) }),
+        body: JSON.stringify({ homeScore: Number(adminHome), awayScore: Number(adminAway), status: adminStatus }),
       });
       if (r.ok) onResultSet?.();
     } finally {
@@ -291,6 +293,16 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
             onChange={(e) => setAdminAway(e.target.value)}
             style={{ width: 40 }}
           />
+          <select
+            className="match-card__status-select"
+            value={adminStatus}
+            onChange={(e) => setAdminStatus(e.target.value)}
+          >
+            <option value="PENDING">Pendiente</option>
+            <option value="STARTING">Por Comenzar</option>
+            <option value="PLAYING">En Juego</option>
+            <option value="FINALIZED">Finalizado</option>
+          </select>
           <button className="btn btn--sm btn--admin" onClick={setResult} disabled={settingResult}>
             {settingResult ? '…' : 'Aplicar'}
           </button>

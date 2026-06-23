@@ -694,6 +694,23 @@ input {
     flex-wrap: wrap;
   }
 
+  &__status-select {
+    height: 30px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border: 2px solid $grey-200;
+    border-radius: $radius;
+    padding: 0 0.35rem;
+    background: $white;
+    color: $grey-700;
+    cursor: pointer;
+    transition: border-color $transition;
+    &:focus {
+      outline: none;
+      border-color: $green;
+    }
+  }
+
   &__footer {
     display: flex;
     justify-content: center;

@@ -49,47 +49,72 @@ router.put("/:id/lock", authenticate, requireAdmin, async (req, res) => {
   emit("update");
 });
 
+const VALID_STATUSES = ["PENDING", "STARTING", "PLAYING", "FINALIZED"];
+
 router.put("/:id/result", authenticate, requireAdmin, async (req, res) => {
   const matchId = parseInt(req.params.id);
-  const { homeScore, awayScore } = req.body;
+  const { homeScore, awayScore, status } = req.body;
 
   if (homeScore == null || awayScore == null)
     return res
       .status(400)
       .json({ error: "homeScore and awayScore are required" });
 
-  const match = await prisma.match.update({
-    where: { id: matchId },
-    data: { homeScore: parseInt(homeScore), awayScore: parseInt(awayScore) },
-    include: { predictions: true },
+  if (status != null && !VALID_STATUSES.includes(status))
+    return res.status(400).json({ error: "Invalid status" });
+
+  const parsedHome = parseInt(homeScore);
+  const parsedAway = parseInt(awayScore);
+  const isFinalized = status === "FINALIZED";
+
+  let updatedMatch;
+  await prisma.$transaction(async (tx) => {
+    updatedMatch = await tx.match.update({
+      where: { id: matchId },
+      data: {
+        homeScore: parsedHome,
+        awayScore: parsedAway,
+        ...(status != null && { matchStatus: status }),
+      },
+      include: { predictions: true },
+    });
+
+    if (isFinalized) {
+      await Promise.all(
+        updatedMatch.predictions.map((p) =>
+          tx.prediction.update({
+            where: { id: p.id },
+            data: { points: calculatePoints(p, updatedMatch) },
+          }),
+        ),
+      );
+    } else if (status != null) {
+      await tx.prediction.updateMany({
+        where: { matchId },
+        data: { points: null },
+      });
+    }
   });
 
-  await Promise.all(
-    match.predictions.map((p) =>
-      prisma.prediction.update({
-        where: { id: p.id },
-        data: { points: calculatePoints(p, match) },
-      })
-    ),
-  );
+  if (isFinalized) await advanceFromResult(updatedMatch);
 
-  await advanceFromResult(match);
-
-  res.json({ ok: true, matchNumber: match.matchNumber });
+  res.json({ ok: true, matchNumber: updatedMatch.matchNumber });
   emit("update");
 });
 
 router.delete("/:id/result", authenticate, requireAdmin, async (req, res) => {
   const matchId = parseInt(req.params.id);
 
-  await prisma.match.update({
-    where: { id: matchId },
-    data: { homeScore: null, awayScore: null },
-  });
+  await prisma.$transaction(async (tx) => {
+    await tx.match.update({
+      where: { id: matchId },
+      data: { homeScore: null, awayScore: null, matchStatus: "PENDING" },
+    });
 
-  await prisma.prediction.updateMany({
-    where: { matchId },
-    data: { points: null },
+    await tx.prediction.updateMany({
+      where: { matchId },
+      data: { points: null },
+    });
   });
 
   res.json({ ok: true, matchId });

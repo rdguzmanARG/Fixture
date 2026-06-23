@@ -40,9 +40,12 @@ async function applyResult(dbMatch, homeScore, awayScore) {
 
 async function fetchEventById(apiKey, eventId) {
   try {
-    const { data } = await axios.get(`${API_BASE}/events/${eventId}/`, {
-      headers: { Authorization: `Token ${apiKey}` },
-    });
+    const { data } = await axios.get(
+      `${API_BASE}/events/${eventId}?league_id=27`,
+      {
+        headers: { Authorization: `Token ${apiKey}` },
+      },
+    );
     return data;
   } catch {
     return null;
@@ -61,9 +64,12 @@ export async function syncMatchResults() {
     return;
   }
 
-  const { data: liveData } = await axios.get(`${API_BASE}/events/live/`, {
-    headers: { Authorization: `Token ${apiKey}` },
-  });
+  const { data: liveData } = await axios.get(
+    `${API_BASE}/events/live?league_id=27`,
+    {
+      headers: { Authorization: `Token ${apiKey}` },
+    },
+  );
 
   const liveEvents = liveData.events ?? [];
   const liveByEventId = Object.fromEntries(
@@ -105,7 +111,11 @@ export async function syncMatchResults() {
           updated++;
           await advanceFromResult({ ...dbMatch, homeScore: h, awayScore: a });
         }
-      } else if (status === "inprogress" || status === "penalties") {
+      } else if (
+        status == "interrupted" ||
+        status === "inprogress" ||
+        status === "penalties"
+      ) {
         const currentMinute = event.current_minute ?? null;
         const noChange =
           dbMatch.homeScore === h &&
@@ -115,7 +125,12 @@ export async function syncMatchResults() {
         if (!noChange) {
           await prisma.match.update({
             where: { id: dbMatch.id },
-            data: { homeScore: h, awayScore: a, matchStatus: "PLAYING", currentMinute },
+            data: {
+              homeScore: h,
+              awayScore: a,
+              matchStatus: "PLAYING",
+              currentMinute,
+            },
           });
           updated++;
         }
