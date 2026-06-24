@@ -109,35 +109,46 @@ export async function checkAndPopulateR32() {
     include: { homeTeam: true, awayTeam: true },
   });
 
-  if (groupMatches.filter((m) => m.homeScore != null).length < 72) return;
-
   const groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
   const allStandings = {};
   const allThirds = [];
 
   for (const letter of groups) {
-    const standings = computeGroupStandings(
-      letter,
-      groupMatches.filter((m) => m.group === letter)
-    );
+    const gm = groupMatches.filter((m) => m.group === letter);
+    if (!gm.every((m) => m.homeScore != null)) continue;
+
+    const standings = computeGroupStandings(letter, gm);
     allStandings[letter] = standings;
     if (standings[2]) allThirds.push(standings[2]);
   }
 
-  const qualifiedThirds = [...allThirds].sort(compareStandings).slice(0, 8);
-  const thirdAssignment = assignThirdPlaceTeams(qualifiedThirds);
+  const completedGroups = Object.keys(allStandings).length;
+  if (completedGroups === 0) return;
+
+  let thirdAssignment = null;
+  if (completedGroups === 12) {
+    const qualifiedThirds = [...allThirds].sort(compareStandings).slice(0, 8);
+    thirdAssignment = assignThirdPlaceTeams(qualifiedThirds);
+  }
 
   const r32Matches = await prisma.match.findMany({ where: { round: 'R32' } });
 
   for (const match of r32Matches) {
     const homeTeamId = resolveLabel(match.homeTeamLabel, match.matchNumber, allStandings, thirdAssignment);
     const awayTeamId = resolveLabel(match.awayTeamLabel, match.matchNumber, allStandings, thirdAssignment);
-    if (homeTeamId != null && awayTeamId != null) {
-      await prisma.match.update({ where: { id: match.id }, data: { homeTeamId, awayTeamId } });
+
+    const data = {};
+    if (homeTeamId != null) data.homeTeamId = homeTeamId;
+    if (awayTeamId != null) data.awayTeamId = awayTeamId;
+
+    if (Object.keys(data).length > 0) {
+      await prisma.match.update({ where: { id: match.id }, data });
     }
   }
 
-  console.log('[knockout] R32 populated from group standings');
+  if (completedGroups === 12) {
+    console.log('[knockout] R32 fully populated from group standings');
+  }
 }
 
 export async function advanceKnockoutWinner(match) {
