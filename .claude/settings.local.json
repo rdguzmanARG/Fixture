@@ -36,7 +36,9 @@
       "Bash(docker exec fixture-mysql *)",
       "Bash(findstr MYSQL)",
       "PowerShell(docker exec fixture-mysql *)",
-      "PowerShell(mysql *)"
+      "PowerShell(mysql *)",
+      "Bash(node *)",
+      "Bash(npx vite *)"
     ]
   }
 }
