@@ -3,11 +3,11 @@ import MatchCard from '../components/MatchCard.jsx';
 import { useRefreshKey } from '../contexts/DataRefreshContext.jsx';
 
 const ROUNDS = [
-  { key: 'R32',   label: 'Ronda de 32' },
-  { key: 'R16',   label: 'Octavos de final' },
-  { key: 'QF',    label: 'Cuartos de final' },
-  { key: 'SF',    label: 'Semifinales' },
-  { key: '3rd',   label: 'Tercer puesto' },
+  { key: 'R32', label: '16vos de final' },
+  { key: 'R16', label: 'Octavos de final' },
+  { key: 'QF', label: 'Cuartos de final' },
+  { key: 'SF', label: 'Semifinales' },
+  { key: '3rd', label: 'Tercer puesto' },
   { key: 'Final', label: 'Final' },
 ];
 
@@ -29,7 +29,7 @@ export default function Knockout() {
 
   if (loading) return <div className="loading">Cargando eliminatorias…</div>;
 
-  const hasTeams = (m) => m.homeTeam && m.awayTeam;
+  const hasTeams = (m) => m.homeTeam || m.awayTeam;
   const assignedMatches = matches.filter(hasTeams);
   const completedCount = assignedMatches.filter((m) => m.userPrediction).length;
 
