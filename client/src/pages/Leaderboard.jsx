@@ -63,7 +63,7 @@ export default function Leaderboard() {
                       <div className="leaderboard__name-cell">
                         <span className="leaderboard__name">{entry.username}</span>
                         {entry.id === user?.userId && (
-                          <span className="leaderboard__you">you</span>
+                          <span className="leaderboard__you">Yo</span>
                         )}
                         <div className="leaderboard__inline-stats">
                           <span>★ {entry.exact}</span>

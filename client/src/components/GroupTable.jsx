@@ -12,8 +12,16 @@ function FlagImg({ code, name }) {
   );
 }
 
-// Computes standings from group matches using actual results (if set) or user predictions
+const LIVE_STATUSES = new Set(['PLAYING', 'STARTING']);
+
+// Computes standings from group matches using actual results only
 export default function GroupTable({ teams, matches }) {
+  const playingTeamIds = new Set(
+    matches
+      .filter((m) => LIVE_STATUSES.has(m.matchStatus))
+      .flatMap((m) => [m.homeTeam?.id, m.awayTeam?.id].filter(Boolean))
+  );
+
   const standings = teams.map((team) => {
     let mp = 0, w = 0, d = 0, l = 0, gf = 0, ga = 0;
 
@@ -22,10 +30,9 @@ export default function GroupTable({ teams, matches }) {
       const isAway = m.awayTeam?.id === team.id;
       if (!isHome && !isAway) continue;
 
-      // Use actual result first; fall back to user prediction
       const result = m.homeScore != null
         ? { homeScore: m.homeScore, awayScore: m.awayScore }
-        : m.userPrediction;
+        : null;
 
       if (!result) continue;
 
@@ -58,11 +65,18 @@ export default function GroupTable({ teams, matches }) {
         </tr>
       </thead>
       <tbody>
-        {standings.map((t, i) => (
-          <tr key={t.id} className={i < 2 ? 'qualified' : i === 2 ? 'third' : ''}>
+        {standings.map((t, i) => {
+          const isPlaying = playingTeamIds.has(t.id);
+          const rowClass = [
+            i < 2 ? 'qualified' : i === 2 ? 'third' : '',
+            isPlaying ? 'playing' : '',
+          ].filter(Boolean).join(' ');
+          return (
+          <tr key={t.id} className={rowClass}>
             <td>
               <FlagImg code={t.flag} name={t.name} />
               <span className="group-table__name">{t.name}</span>
+              {isPlaying && <span className="group-table__live-dot" title="Jugando ahora" />}
             </td>
             <td>{t.mp}</td>
             <td>{t.w}</td>
@@ -73,7 +87,8 @@ export default function GroupTable({ teams, matches }) {
             <td>{t.gd > 0 ? `+${t.gd}` : t.gd}</td>
             <td><strong>{t.pts}</strong></td>
           </tr>
-        ))}
+          );
+        })}
       </tbody>
     </table>
     </div>
