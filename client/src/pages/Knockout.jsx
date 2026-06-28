@@ -1,22 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
-import MatchCard from '../components/MatchCard.jsx';
 import BracketDiagram from '../components/BracketDiagram.jsx';
 import { useRefreshKey } from '../contexts/DataRefreshContext.jsx';
-
-const ROUNDS = [
-  { key: 'R32', label: '16vos de final' },
-  { key: 'R16', label: 'Octavos de final' },
-  { key: 'QF', label: 'Cuartos de final' },
-  { key: 'SF', label: 'Semifinales' },
-  { key: '3rd', label: 'Tercer puesto' },
-  { key: 'Final', label: 'Final' },
-];
 
 export default function Knockout() {
   const refreshKey = useRefreshKey();
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [view, setView] = useState('list');
 
   const load = useCallback(async () => {
     const r = await fetch('/api/matches', { credentials: 'include' });
@@ -44,56 +33,7 @@ export default function Knockout() {
         </div>
       </div>
       <div className="container">
-        <div className="view-tabs">
-          <button
-            className={`view-tab${view === 'list' ? ' view-tab--active' : ''}`}
-            onClick={() => setView('list')}
-          >
-            Lista
-          </button>
-          <button
-            className={`view-tab${view === 'bracket' ? ' view-tab--active' : ''}`}
-            onClick={() => setView('bracket')}
-          >
-            Diagrama
-          </button>
-        </div>
-
-        {view === 'list' ? (
-          assignedMatches.length === 0 ? (
-            <div className="empty-state">
-              <div className="empty-state__icon">⏳</div>
-              <div className="empty-state__text">Los equipos de la fase eliminatoria aún no están definidos. Vuelve cuando finalice la fase de grupos.</div>
-            </div>
-          ) : (
-            <div className="bracket">
-              {ROUNDS.map(({ key, label }) => {
-                const roundMatches = assignedMatches.filter((m) => m.round === key);
-                if (roundMatches.length === 0) return null;
-                return (
-                  <div key={key} className="bracket__round">
-                    <div className="bracket__round-title">
-                      {label}
-                      <span className="round-badge">{roundMatches.length} {roundMatches.length === 1 ? 'partido' : 'partidos'}</span>
-                    </div>
-                    <div className="bracket__grid">
-                      {roundMatches.map((m) => (
-                        <MatchCard
-                          key={m.id}
-                          match={m}
-                          onPredictionSaved={load}
-                          onResultSet={load}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )
-        ) : (
-          <BracketDiagram matches={matches} />
-        )}
+        <BracketDiagram matches={matches} />
       </div>
     </div>
   );
