@@ -15,6 +15,7 @@
     "db:init-sync": "node --env-file=.env src/scripts/initExternalIds.js",
     "db:update-times": "node --env-file=.env src/scripts/updateMatchTimes.js",
     "db:backfill-status": "node --env-file=.env src/scripts/backfillMatchStatus.js",
+    "db:sync-knockout-ids": "node --env-file=.env src/scripts/syncKnockoutExternalIds.js",
     "db:studio": "prisma studio"
   },
   "dependencies": {

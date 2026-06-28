@@ -33,7 +33,8 @@ export default function AllMatches() {
   const sorted = [...filtered].sort((a, b) => {
     if (!a.date) return 1;
     if (!b.date) return -1;
-    return new Date(a.date) - new Date(b.date);
+    const diff = new Date(a.date) - new Date(b.date);
+    return showOnlyFinalized ? -diff : diff;
   });
 
   const groups = [];
