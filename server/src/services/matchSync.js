@@ -15,13 +15,20 @@ export async function syncIfNeeded() {
   lastSyncAt = now;
   await lockStartedMatches();
   await syncMatchResults();
+  await backfillMissingPenalties();
 }
 
-async function applyResult(dbMatch, homeScore, awayScore) {
+async function applyResult(dbMatch, homeScore, awayScore, homePenalties, awayPenalties) {
   await prisma.$transaction(async (tx) => {
     const updated = await tx.match.update({
       where: { id: dbMatch.id },
-      data: { homeScore, awayScore, matchStatus: "FINALIZED" },
+      data: {
+        homeScore,
+        awayScore,
+        homePenalties: homePenalties ?? null,
+        awayPenalties: awayPenalties ?? null,
+        matchStatus: "FINALIZED",
+      },
       include: { predictions: true },
     });
 
@@ -104,12 +111,16 @@ export async function syncMatchResults() {
 
     if (dbMatch.scoreReversed) [h, a] = [a, h];
 
+    let hp = event.penalty_shootout?.home ?? null;
+    let ap = event.penalty_shootout?.away ?? null;
+    if (dbMatch.scoreReversed && hp != null) [hp, ap] = [ap, hp];
+
     try {
       if (status === "finished") {
-        const changed = await applyResult(dbMatch, h, a);
+        const changed = await applyResult(dbMatch, h, a, hp, ap);
         if (changed) {
           updated++;
-          await advanceFromResult({ ...dbMatch, homeScore: h, awayScore: a });
+          await advanceFromResult({ ...dbMatch, homeScore: h, awayScore: a, homePenalties: hp, awayPenalties: ap });
         }
       } else if (
         status == "interrupted" ||
@@ -142,6 +153,52 @@ export async function syncMatchResults() {
 
   if (updated > 0) {
     console.log(`[sync] Updated ${updated} match result(s)`);
+    emit("update");
+  }
+}
+
+// Pick up penalty scores for knockout matches that were finalized with a tied score
+// but have no penalty data yet (e.g., the sync ran before penalties were entered in BSD).
+async function backfillMissingPenalties() {
+  const apiKey = process.env.BSD_API_KEY;
+  if (!apiKey) return;
+
+  const tiedKnockout = await prisma.match.findMany({
+    where: {
+      round: { not: "Group" },
+      matchStatus: "FINALIZED",
+      homePenalties: null,
+      externalId: { not: null },
+      // only matches where regular-time score is tied
+      AND: [{ homeScore: { not: null } }, { awayScore: { not: null } }],
+    },
+    include: { predictions: true },
+  });
+
+  // Filter to only truly tied matches (Prisma can't compare two columns directly)
+  const tied = tiedKnockout.filter((m) => m.homeScore === m.awayScore);
+  if (tied.length === 0) return;
+
+  let patched = 0;
+  for (const dbMatch of tied) {
+    const event = await fetchEventById(apiKey, dbMatch.externalId);
+    if (!event?.penalty_shootout) continue;
+
+    let hp = event.penalty_shootout.home;
+    let ap = event.penalty_shootout.away;
+    if (dbMatch.scoreReversed) [hp, ap] = [ap, hp];
+
+    await prisma.match.update({
+      where: { id: dbMatch.id },
+      data: { homePenalties: hp, awayPenalties: ap },
+    });
+
+    await advanceFromResult({ ...dbMatch, homePenalties: hp, awayPenalties: ap });
+    patched++;
+  }
+
+  if (patched > 0) {
+    console.log(`[sync] Backfilled penalties for ${patched} match(es)`);
     emit("update");
   }
 }

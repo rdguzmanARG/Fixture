@@ -53,6 +53,8 @@ model Match {
   city          String?
   homeScore     Int?
   awayScore     Int?
+  homePenalties Int?
+  awayPenalties Int?
   isLocked      Boolean      @default(false)
   externalId    String?      @unique
   scoreReversed Boolean      @default(false)

@@ -124,7 +124,12 @@ export default function UserPredictions() {
                       {hasResult && (
                         <div className="user-pred__score-block user-pred__score-block--result">
                           <span className="user-pred__score-label">Resultado</span>
-                          <span className="user-pred__score">{m.homeScore} – {m.awayScore}</span>
+                          <span className="user-pred__score">
+                            {m.homeScore} – {m.awayScore}
+                            {m.homePenalties != null && m.awayPenalties != null && (
+                              <span className="user-pred__pen"> ({m.homePenalties} – {m.awayPenalties} pen.)</span>
+                            )}
+                          </span>
                         </div>
                       )}
                     </div>

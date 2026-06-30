@@ -152,11 +152,19 @@ export async function checkAndPopulateR32() {
 }
 
 export async function advanceKnockoutWinner(match) {
-  const { matchNumber, homeTeamId, awayTeamId, homeScore, awayScore } = match;
-  if (homeScore == null || awayScore == null || homeScore === awayScore) return;
+  const { matchNumber, homeTeamId, awayTeamId, homeScore, awayScore, homePenalties, awayPenalties } = match;
+  if (homeScore == null || awayScore == null) return;
 
-  const winnerId = homeScore > awayScore ? homeTeamId : awayTeamId;
-  const loserId  = homeScore > awayScore ? awayTeamId : homeTeamId;
+  let winnerId, loserId;
+  if (homeScore !== awayScore) {
+    winnerId = homeScore > awayScore ? homeTeamId : awayTeamId;
+    loserId  = homeScore > awayScore ? awayTeamId : homeTeamId;
+  } else if (homePenalties != null && awayPenalties != null && homePenalties !== awayPenalties) {
+    winnerId = homePenalties > awayPenalties ? homeTeamId : awayTeamId;
+    loserId  = homePenalties > awayPenalties ? awayTeamId : homeTeamId;
+  } else {
+    return; // tied with no valid penalty data yet
+  }
 
   await Promise.all([
     prisma.match.updateMany({ where: { homeTeamLabel: `W${matchNumber}` }, data: { homeTeamId: winnerId } }),
@@ -170,7 +178,7 @@ export async function advanceFromResult(match) {
   try {
     if (match.round === 'Group') {
       await checkAndPopulateR32();
-    } else if (match.homeScore !== match.awayScore) {
+    } else {
       await advanceKnockoutWinner(match);
     }
   } catch (err) {

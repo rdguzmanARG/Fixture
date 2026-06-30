@@ -38,7 +38,10 @@
       "PowerShell(docker exec fixture-mysql *)",
       "PowerShell(mysql *)",
       "Bash(node *)",
-      "Bash(npx vite *)"
+      "Bash(npx vite *)",
+      "Bash(mysql --version)",
+      "Bash(curl -s 'https://sports.bzzoiro.com/api/v2/events/?league_id=27&limit=1&offset=0' -H 'Authorization: Token 54297112a2d6945fc1d648de409e2c64f64bf0f5')",
+      "Bash(python3 -c \"import sys,json; data=json.load\\(sys.stdin\\); events=data.get\\('results',[]\\); print\\(json.dumps\\(events[0], indent=2\\) if events else 'no events'\\)\")"
     ]
   }
 }

@@ -53,7 +53,7 @@ const VALID_STATUSES = ["PENDING", "STARTING", "PLAYING", "FINALIZED"];
 
 router.put("/:id/result", authenticate, requireAdmin, async (req, res) => {
   const matchId = parseInt(req.params.id);
-  const { homeScore, awayScore, status } = req.body;
+  const { homeScore, awayScore, homePenalties, awayPenalties, status } = req.body;
 
   if (homeScore == null || awayScore == null)
     return res
@@ -67,6 +67,11 @@ router.put("/:id/result", authenticate, requireAdmin, async (req, res) => {
   const parsedAway = parseInt(awayScore);
   const isFinalized = status === "FINALIZED";
 
+  // Only store penalties when it's a tie (they're irrelevant otherwise)
+  const isTie = parsedHome === parsedAway;
+  const parsedHomePen = isTie && homePenalties != null ? parseInt(homePenalties) : null;
+  const parsedAwayPen = isTie && awayPenalties != null ? parseInt(awayPenalties) : null;
+
   let updatedMatch;
   await prisma.$transaction(async (tx) => {
     updatedMatch = await tx.match.update({
@@ -74,6 +79,8 @@ router.put("/:id/result", authenticate, requireAdmin, async (req, res) => {
       data: {
         homeScore: parsedHome,
         awayScore: parsedAway,
+        homePenalties: parsedHomePen,
+        awayPenalties: parsedAwayPen,
         ...(status != null && { matchStatus: status }),
       },
       include: { predictions: true },
@@ -108,7 +115,7 @@ router.delete("/:id/result", authenticate, requireAdmin, async (req, res) => {
   await prisma.$transaction(async (tx) => {
     await tx.match.update({
       where: { id: matchId },
-      data: { homeScore: null, awayScore: null, matchStatus: "PENDING" },
+      data: { homeScore: null, awayScore: null, homePenalties: null, awayPenalties: null, matchStatus: "PENDING" },
     });
 
     await tx.prediction.updateMany({

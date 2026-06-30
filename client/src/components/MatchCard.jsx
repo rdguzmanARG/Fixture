@@ -48,6 +48,8 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
   // Admin state
   const [adminHome, setAdminHome] = useState(match.homeScore ?? '');
   const [adminAway, setAdminAway] = useState(match.awayScore ?? '');
+  const [adminHomePen, setAdminHomePen] = useState(match.homePenalties ?? '');
+  const [adminAwayPen, setAdminAwayPen] = useState(match.awayPenalties ?? '');
   const [adminStatus, setAdminStatus] = useState(match.matchStatus ?? 'PENDING');
   const [settingResult, setSettingResult] = useState(false);
   const [removingResult, setRemovingResult] = useState(false);
@@ -129,7 +131,13 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ homeScore: Number(adminHome), awayScore: Number(adminAway), status: adminStatus }),
+        body: JSON.stringify({
+          homeScore: Number(adminHome),
+          awayScore: Number(adminAway),
+          homePenalties: adminHomePen !== '' ? Number(adminHomePen) : null,
+          awayPenalties: adminAwayPen !== '' ? Number(adminAwayPen) : null,
+          status: adminStatus,
+        }),
       });
       if (r.ok) onResultSet?.();
     } finally {
@@ -199,6 +207,9 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
       {match.homeScore != null && (
         <div className="match-card__result">
           {match.matchStatus === 'PLAYING' ? 'En juego:' : 'Resultado:'} {match.homeScore} – {match.awayScore}
+          {match.homePenalties != null && match.awayPenalties != null && (
+            <span className="match-card__penalties"> ({match.homePenalties} – {match.awayPenalties} pen.)</span>
+          )}
         </div>
       )}
 
@@ -293,6 +304,30 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
             onChange={(e) => setAdminAway(e.target.value)}
             style={{ width: 40 }}
           />
+          {match.round !== 'Group' && adminHome !== '' && adminAway !== '' && Number(adminHome) === Number(adminAway) && (
+            <>
+              <small style={{ color: '#868e96' }}>Pen.:</small>
+              <input
+                className="match-card__score-input"
+                type="number"
+                min="0"
+                value={adminHomePen}
+                onChange={(e) => setAdminHomePen(e.target.value)}
+                style={{ width: 40 }}
+                placeholder="-"
+              />
+              <span>–</span>
+              <input
+                className="match-card__score-input"
+                type="number"
+                min="0"
+                value={adminAwayPen}
+                onChange={(e) => setAdminAwayPen(e.target.value)}
+                style={{ width: 40 }}
+                placeholder="-"
+              />
+            </>
+          )}
           <select
             className="match-card__status-select"
             value={adminStatus}

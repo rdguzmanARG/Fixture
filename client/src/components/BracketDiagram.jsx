@@ -89,7 +89,7 @@ function getCurrentRound(matches) {
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
-function TeamRow({ team, label, score, winner }) {
+function TeamRow({ team, label, score, penalty, winner }) {
   return (
     <div className={`bslot__row${winner ? ' bslot__row--win' : ''}`}>
       {team ? (
@@ -107,7 +107,11 @@ function TeamRow({ team, label, score, winner }) {
       ) : (
         <span className="bslot__lbl">{label || '—'}</span>
       )}
-      {score != null && <span className="bslot__sc">{score}</span>}
+      {score != null && (
+        <span className="bslot__sc">
+          {score}{penalty != null && <span className="bslot__pen"> ({penalty})</span>}
+        </span>
+      )}
     </div>
   );
 }
@@ -115,7 +119,13 @@ function TeamRow({ team, label, score, winner }) {
 function MatchSlot({ match, x, y }) {
   const hs = match?.homeScore;
   const as = match?.awayScore;
+  const hp = match?.homePenalties;
+  const ap = match?.awayPenalties;
   const scored = hs != null && as != null;
+  const tied = scored && hs === as;
+
+  const homeWin = scored && (hs > as || (tied && hp != null && hp > ap));
+  const awayWin = scored && (as > hs || (tied && ap != null && ap > hp));
 
   return (
     <div
@@ -126,14 +136,16 @@ function MatchSlot({ match, x, y }) {
         team={match?.homeTeam}
         label={match?.homeTeamLabel}
         score={scored ? hs : null}
-        winner={scored && hs > as}
+        penalty={tied ? hp : null}
+        winner={homeWin}
       />
       <div className="bslot__sep" />
       <TeamRow
         team={match?.awayTeam}
         label={match?.awayTeamLabel}
         score={scored ? as : null}
-        winner={scored && as > hs}
+        penalty={tied ? ap : null}
+        winner={awayWin}
       />
     </div>
   );

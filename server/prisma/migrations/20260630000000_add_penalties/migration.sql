@@ -1,0 +1,2 @@
+ALTER TABLE `match` ADD COLUMN `homePenalties` INTEGER NULL;
+ALTER TABLE `match` ADD COLUMN `awayPenalties` INTEGER NULL;
