@@ -85,13 +85,12 @@ export default function MatchPredictions() {
             <div className="match-preds__header-score">
               {hasResult
                 ? <>
-                    <span>{match.homeScore}</span>
-                    <span className="match-preds__header-sep">–</span>
-                    <span>{match.awayScore}</span>
-                    {match.homePenalties != null && match.awayPenalties != null && (
-                      <span className="match-preds__header-pen"> ({match.homePenalties} – {match.awayPenalties} pen.)</span>
-                    )}
-                  </>
+                  <span>{match.homeScore}</span>
+                  <span> {match.homePenalties != null ? `(${match.homePenalties})` : ''} </span>
+                  <span className="match-preds__header-sep">–</span>
+                  <span>{match.awayScore}</span>
+                  <span> {match.awayPenalties != null ? `(${match.awayPenalties})` : ''} </span>
+                </>
                 : <span className="match-preds__header-vs">vs</span>
               }
             </div>
