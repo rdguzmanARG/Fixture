@@ -450,8 +450,15 @@ input {
 }
 
 @keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.4; transform: scale(0.7); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.7);
+  }
 }
 
 // ── Match card ────────────────────────────────────────────────────────────────
@@ -1375,7 +1382,9 @@ input {
   font-weight: 600;
   color: $grey-400;
   cursor: pointer;
-  transition: color $transition, border-color $transition;
+  transition:
+    color $transition,
+    border-color $transition;
 
   &:hover {
     color: $green-dark;
@@ -1545,14 +1554,28 @@ input {
 
   &__header-score {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 0.1rem;
+    min-width: 4rem;
+    text-align: center;
+  }
+
+  &__header-score-main {
+    display: flex;
+    align-items: center;
     gap: 0.35rem;
     font-size: 1.6rem;
     font-weight: 800;
     color: $white;
-    min-width: 4rem;
-    text-align: center;
+  }
+
+  &__header-pen {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.65);
+    white-space: nowrap;
   }
 
   &__header-sep {
