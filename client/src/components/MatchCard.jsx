@@ -63,8 +63,8 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
   const status = cardStatus(match, pred);
   const homeLabel = match.homeTeam?.name || match.homeTeamLabel || '?';
   const awayLabel = match.awayTeam?.name || match.awayTeamLabel || '?';
-  const homeFlag  = match.homeTeam?.flag;
-  const awayFlag  = match.awayTeam?.flag;
+  const homeFlag = match.homeTeam?.flag;
+  const awayFlag = match.awayTeam?.flag;
 
   async function savePrediction() {
     if (home === '' || away === '') return;
@@ -206,10 +206,7 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
 
       {match.homeScore != null && (
         <div className="match-card__result">
-          {match.matchStatus === 'PLAYING' ? 'En juego:' : 'Resultado:'} {match.homeScore} – {match.awayScore}
-          {match.homePenalties != null && match.awayPenalties != null && (
-            <span className="match-card__penalties"> ({match.homePenalties} – {match.awayPenalties} pen.)</span>
-          )}
+          {match.matchStatus === 'PLAYING' ? 'En juego:' : 'Resultado:'} {match.homeScore} {match.homePenalties != null ? `(${match.homePenalties})` : ''} – {match.awayScore} {match.awayPenalties != null ? `(${match.awayPenalties})` : ''}
         </div>
       )}
 
@@ -219,10 +216,10 @@ export default function MatchCard({ match, onPredictionSaved, onResultSet }) {
           onClick={() => navigate(`/matches/${match.id}/predictions`)}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
           </svg>
           Ver pronósticos
         </button>
